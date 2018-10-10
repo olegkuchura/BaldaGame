@@ -6,3 +6,4 @@ For each word the player gains the number of points equal to the length of the w
 Wins the one who can score the most points.
 
 Only one-man game is available for now.
+Only russian dictionary is available for now.
