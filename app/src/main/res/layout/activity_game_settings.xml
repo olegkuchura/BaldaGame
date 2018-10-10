@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        tools:context="com.adlab.balda.activities.GameSettingsActivity">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp">
+
+            <RelativeLayout
+                android:id="@+id/rl_choose_init_word"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:id="@+id/tv_enter_init_word"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/enter_init_word"
+                    android:textSize="28sp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/til"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_enter_init_word"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@id/ib_generate_word"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/et_initWord"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapCharacters|textNoSuggestions"
+                        android:hint="@string/init_word"
+                        tools:text="БАЛДА"
+                        android:text=" "/>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/ib_generate_word"
+                    style="@android:style/Widget.DeviceDefault.Light.ImageButton"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/tv_enter_init_word"
+                    android:layout_marginTop="12dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/dice1" />
+
+                <TextView
+                    android:id="@+id/tv_non_existent_word"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/til"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/non_existent_word"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:visibility="invisible"/>
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp">
+
+            <RelativeLayout
+                android:id="@+id/rl_choose_field_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp">
+
+                <TextView
+                    android:id="@+id/tv_choose_field_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/choose_field_size"
+                    android:textSize="28sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/ll_column_count"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/row_count"
+                    android:textSize="24sp"  />
+
+                <LinearLayout
+                    android:id="@+id/ll_row_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_choose_field_size"
+                    android:layout_toEndOf="@id/column_count"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="28dp"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/b_reduce_row_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_exposure_neg_1_black_24dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_row_count"
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        tools:text="5"
+                        android:textSize="24sp" />
+
+                    <ImageButton
+                        android:id="@+id/b_increase_row_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_exposure_plus_1_black_24dp" />
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/column_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/ll_column_count"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/column_count"
+                    android:textSize="24sp" />
+
+                <LinearLayout
+                    android:id="@+id/ll_column_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_row_count"
+                    android:layout_toEndOf="@id/column_count"
+                    android:layout_marginStart="28dp"
+                    android:orientation="horizontal"   >
+
+                    <ImageButton
+                        android:id="@+id/b_reduce_col_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_exposure_neg_1_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/tv_column_count"
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        tools:text="5"
+                        android:textSize="24sp" />
+
+                    <ImageButton
+                        android:id="@+id/b_increase_col_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_exposure_plus_1_black_24dp" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <Button
+            android:id="@+id/b_start_game"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/start_game" />
+
+    </LinearLayout>
+
+</ScrollView>
