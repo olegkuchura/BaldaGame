@@ -27,7 +27,6 @@ import android.widget.Toast;
 
 import com.adlab.balda.adapters.FieldRecyclerAdapter;
 import com.adlab.balda.R;
-import com.adlab.balda.layouts.MyGridLayoutManager;
 import com.adlab.balda.model.ActivityForPlayer;
 import com.adlab.balda.model.ActivityPlayer;
 import com.adlab.balda.model.Game;
@@ -37,7 +36,6 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class GameActivity extends AppCompatActivity implements FieldRecyclerAdapter.OnItemClickListener, ActivityForPlayer{
     private static final String SHARED_SETTINGS = "settings";

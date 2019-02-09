@@ -15,8 +15,6 @@ import android.widget.TextView;
 
 import com.adlab.balda.R;
 import com.adlab.balda.activities.Field;
-import com.adlab.balda.layouts.DynamicGridLayoutManager;
-import com.adlab.balda.layouts.FixedGridLayoutManager;
 
 /**
  * Created by Oleg on 07.08.2018.
