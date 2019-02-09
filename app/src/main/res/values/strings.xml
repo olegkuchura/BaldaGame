@@ -1,46 +1,52 @@
 <resources>
     <string name="app_name">Balda</string>
-    <string-array name="main_menu">
-        <item>Start single game</item>
-        <item>Start multiple game</item>
-        <item>Settings</item>
-    </string-array>
 
+    // --- MAIN SCREEN ---
+    // Main screen buttons
     <string name="start_one_man_game">Start one-man game</string>
     <string name="start_game_with_android">Start game with android</string>
     <string name="start_game_with_friends">Start game with friends</string>
     <string name="settings">Settings</string>
+    // Main screen title
     <string name="description_title">Title Balda</string>
 
+    // --- GAME SETTINGS SCREEN ---
+    // Block titles
     <string name="choose_field_size">Choose field size</string>
     <string name="enter_init_word">Enter the initial word</string>
+
     <string name="init_word">Initial word</string>
     <string name="row_count">Row count:</string>
     <string name="column_count">Column count:</string>
     <string name="start_game">Start game</string>
     <string name="non_existent_word">*this is a non-existent word</string>
-    <string name="database_creation">Database creation</string>
-    <string name="score">Your score: %1$d</string>
 
+    // --- SPLASH SCREEN ---
+    <string name="database_creation">Database creation</string>
+
+    // --- GAME SCREEN ---
+    <string name="score">Your score: %1$d</string>
+    // Toolbar
     <string name="confirm">Confirm</string>
-    
+    // Tooltips
     <string name="enter_new_letter">First you need to enter a new letter</string>
     <string name="no_such_word">There is no such word in the dictionary!</string>
     <string name="such_word_have_already_been_used">Such word have already been used in this game!</string>
     <string name="must_contain_new_letter">The word must contain a new letter!</string>
-
-    <string name="plus_points"> + %1$d + points</string>
-
+    // Animation
+    <string name="plus_points"> +%1$d points</string>
+    // Game end dialog
     <string name="congratulations">Congratulations</string>
     <string name="you_won">You won\n Your score: %1$d</string>
     <string name="you_lost">You lost\n Your score: %1$d</string>
     <string name="filled_whole_field">You have filled whole field!\nYour score: %1$d</string>
     <string name="back_to_menu">Back to Menu</string>
     <string name="start_new_game">Start a new game</string>
-
+    // Exit from game dialog
     <string name="exit">Exit</string>
     <string name="exit_game_message">Do you want to finish this game?\nIt will not be saved</string>
-    <string name="finish">Finish</string>
-    <string name="back_to_the_game">Back to the game</string>
+    <string name="finish">Yes, finish the game</string>
+    <!-- <string name="back_to_the_game">No, back to the game</string> -->
+    <string name="back_to_the_game">No, go back</string>
 
 </resources>
