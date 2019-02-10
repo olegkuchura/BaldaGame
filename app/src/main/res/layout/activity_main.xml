@@ -19,51 +19,39 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/balda_image"
-            android:contentDescription="@string/description_title"/>
+            android:contentDescription="@string/description_title"
+            android:src="@drawable/balda_image" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/b_one_man_game"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/MainMenuButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:text="@string/start_one_man_game"
-            android:textSize="24sp"/>
+            android:text="@string/start_one_man_game" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/b_game_with_android"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/MainMenuButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:text="@string/start_game_with_android"
-            android:textSize="24sp"/>
+            android:layout_marginTop="4dp"
+            android:text="@string/start_game_with_android" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/b_game_with_friends"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/MainMenuButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:text="@string/start_game_with_friends"
-            android:textSize="24sp"/>
+            android:layout_marginTop="4dp"
+            android:text="@string/start_game_with_friends" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/b_settings"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/MainMenuButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:text="@string/settings"
-            android:textSize="24sp"/>
+            android:layout_marginTop="4dp"
+            android:text="@string/settings" />
     </LinearLayout>
 
 </ScrollView>

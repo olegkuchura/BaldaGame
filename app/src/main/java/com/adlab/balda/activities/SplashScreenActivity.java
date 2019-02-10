@@ -2,12 +2,12 @@ package com.adlab.balda.activities;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 
 import com.adlab.balda.R;
 import com.adlab.balda.database.BaldaDataBase;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -19,11 +19,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        new CreateDabaseTask().execute();
+        new CreateDatabaseTask().execute();
     }
 
 
-    class CreateDabaseTask extends AsyncTask<Void, Void, Void> {
+    class CreateDatabaseTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {

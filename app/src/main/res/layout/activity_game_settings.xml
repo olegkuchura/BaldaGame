@@ -9,10 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="8dp"
         tools:context="com.adlab.balda.activities.GameSettingsActivity">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp">
@@ -34,39 +33,41 @@
                     android:text="@string/enter_init_word"
                     android:textSize="28sp" />
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_enter_init_word"
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@id/ib_generate_word"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp">
+                    android:layout_marginEnd="12dp"
+                    android:hint="@string/init_word"
+                    app:errorEnabled="true">
 
-                    <android.support.design.widget.TextInputEditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/et_initWord"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textCapCharacters|textNoSuggestions"
-                        android:hint="@string/init_word"
                         tools:text="БАЛДА"
-                        android:text=" "/>
+                        android:text=" " />
 
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <android.support.v7.widget.AppCompatImageButton
+                <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/ib_generate_word"
                     style="@android:style/Widget.DeviceDefault.Light.ImageButton"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_alignParentEnd="true"
                     android:layout_below="@id/tv_enter_init_word"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="18dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/dice1" />
 
-                <TextView
+                <!-- <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_non_existent_word"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -74,14 +75,14 @@
                     android:layout_alignParentStart="true"
                     android:text="@string/non_existent_word"
                     android:textColor="@android:color/holo_red_dark"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible"/> -->
 
             </RelativeLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp">
@@ -196,12 +197,10 @@
 
             </RelativeLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/b_start_game"
-            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"

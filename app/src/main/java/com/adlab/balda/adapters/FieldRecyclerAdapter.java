@@ -3,18 +3,20 @@ package com.adlab.balda.adapters;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Build;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.adlab.balda.R;
 import com.adlab.balda.activities.Field;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Oleg on 07.08.2018.
@@ -47,7 +49,7 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
 
 
     @Override
-    public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.field_item, parent, false);
 
         float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, itemSize, context.getResources().getDisplayMetrics());
@@ -64,7 +66,7 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         if (position == field.getEnteredViewNumber()) {
             holder.textView.setText(String.valueOf(field.getEnteredLetter()).toUpperCase());
             holder.textView.setTextColor(defaultTextColor);
@@ -97,7 +99,7 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
         }
     }
 
-    private void setTextColor(TextView view, int colorId){
+    private void setTextColor(TextView view, @ColorRes int colorId){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             view.setTextColor(context.getColor(colorId));
         } else {
@@ -122,7 +124,7 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
         TextView textView;
         TextView textViewNumber;
 
-        public RecyclerViewHolder(View itemView) {
+        RecyclerViewHolder(View itemView) {
             super(itemView);
 
             textView = itemView.findViewById(R.id.field_item_text_view);
