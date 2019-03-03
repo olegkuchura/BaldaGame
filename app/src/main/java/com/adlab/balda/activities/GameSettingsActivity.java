@@ -168,7 +168,6 @@ public class GameSettingsActivity extends AppCompatActivity implements GameSetti
         super.onDestroy();
         mPresenter.resetView();
         if (isFinishing()) {
-            mPresenter.destroy();
             PresenterManager.resetGameSettingsPresenter();
         }
     }

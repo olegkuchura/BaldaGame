@@ -37,11 +37,9 @@ public class BaldaDataBase extends SQLiteOpenHelper {
         Cursor cursor = db.query(TABLE_WORDS, new String[]{COLUMN_AUTO_ID, COLUMN_WORD}, "word = ?", new String[]{word},
                 null, null, null);
         Log.i(BaldaDataBase.class.getSimpleName(), "count of rows: " + cursor.getCount());
-        if (cursor.getCount() == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        int count = cursor.getCount();
+        cursor.close();
+        return count != 0;
     }
 
     /*public String getRandomWord(){

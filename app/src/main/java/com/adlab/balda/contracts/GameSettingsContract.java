@@ -54,8 +54,6 @@ public interface GameSettingsContract {
 
         void startGame();
 
-        void destroy();
-
     }
 
 }

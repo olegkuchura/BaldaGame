@@ -2,6 +2,8 @@ package com.adlab.balda.presenters;
 
 import com.adlab.balda.contracts.GameSettingsContract;
 import com.adlab.balda.database.BaldaDataBase;
+import com.adlab.balda.database.WordsDataSource;
+import com.adlab.balda.database.WordsRepository;
 
 import androidx.annotation.NonNull;
 
@@ -10,7 +12,7 @@ public class GameSettingsPresenter implements GameSettingsContract.Presenter {
     private static final int MIN_FIELD_SIZE = 3;
     private static final int DEFAULT_FIELD_SIZE = 5;
 
-    private BaldaDataBase mDatabase;
+    private WordsRepository mRepository;
 
     private GameSettingsContract.View mGameSettingsView;
 
@@ -19,8 +21,8 @@ public class GameSettingsPresenter implements GameSettingsContract.Presenter {
     private int mRowCount;
     private int mColCount;
 
-    public GameSettingsPresenter(@NonNull BaldaDataBase database, @NonNull GameSettingsContract.View view) {
-        mDatabase = database;
+    public GameSettingsPresenter(@NonNull WordsRepository repository, @NonNull GameSettingsContract.View view) {
+        mRepository = repository;
         mGameSettingsView = view;
 
         mGameSettingsView.setPresenter(this);
@@ -60,26 +62,38 @@ public class GameSettingsPresenter implements GameSettingsContract.Presenter {
             mGameSettingsView.setStartGameEnabled(false);
             return;
         }
-        mIsCurrentWordExist = mDatabase.isWordExist(mCurrentWord);
-        if (mIsCurrentWordExist){
-            mGameSettingsView.hideInitWordError();
-            mGameSettingsView.setStartGameEnabled(newWord.length() == mColCount);
-        } else {
-            mGameSettingsView.showNonExistentWordError();
-            mGameSettingsView.setStartGameEnabled(false);
-        }
+        mRepository.isWordExist(mCurrentWord, new WordsDataSource.CheckWordCallback() {
+            @Override
+            public void onWordChecked(boolean isWordExist) {
+                mIsCurrentWordExist = isWordExist;
+                if (mIsCurrentWordExist){
+                    mGameSettingsView.hideInitWordError();
+                    mGameSettingsView.setStartGameEnabled(mCurrentWord.length() == mColCount);
+                } else {
+                    mGameSettingsView.showNonExistentWordError();
+                    mGameSettingsView.setStartGameEnabled(false);
+                }
+            }
+        });
     }
 
     @Override
     public void generateRandomWord() {
-        String word = mDatabase.getRandomWord(mColCount);
-        if (word != null) {
-            mCurrentWord = word;
-            mIsCurrentWordExist = true;
-            mGameSettingsView.setInitWord(mCurrentWord);
-            mGameSettingsView.hideInitWordError();
-            mGameSettingsView.setStartGameEnabled(true);
-        }
+        mRepository.getRandomWord(mColCount, new WordsDataSource.GetWordCallback() {
+            @Override
+            public void onWordLoaded(@NonNull String word) {
+                mCurrentWord = word;
+                mIsCurrentWordExist = true;
+                mGameSettingsView.setInitWord(mCurrentWord);
+                mGameSettingsView.hideInitWordError();
+                mGameSettingsView.setStartGameEnabled(true);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+
+            }
+        });
     }
 
     @Override
@@ -143,10 +157,5 @@ public class GameSettingsPresenter implements GameSettingsContract.Presenter {
     @Override
     public void startGame() {
         mGameSettingsView.showGameScreen(mCurrentWord, mRowCount, mColCount);
-    }
-
-    @Override
-    public void destroy() {
-        mDatabase.close();
     }
 }

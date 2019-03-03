@@ -14,7 +14,9 @@ public class PresenterManager {
 
     public static void provideGameSettingsPresenter(@NonNull Context context, @NonNull GameSettingsContract.View view) {
         if (mGameSettingsPresenter == null) {
-            mGameSettingsPresenter = new GameSettingsPresenter(new BaldaDataBase(context.getApplicationContext()), view);
+            mGameSettingsPresenter = new GameSettingsPresenter(
+                    Injection.provideWordsRepository(context.getApplicationContext()),
+                    view);
         } else {
             mGameSettingsPresenter.setView(view);
         }
