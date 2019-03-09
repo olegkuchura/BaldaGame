@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,6 +25,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.adlab.balda.widgets.BorderDecoration;
 import com.adlab.balda.adapters.FieldRecyclerAdapter;
 import com.adlab.balda.R;
 import com.adlab.balda.model.ActivityForPlayer;
@@ -128,6 +130,8 @@ public class GameActivity extends AppCompatActivity implements FieldRecyclerAdap
         GridLayoutManager layoutManager = new GridLayoutManager(this, colCount);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        BorderDecoration decoration = new BorderDecoration(this, Color.GRAY, 2f, colCount);
+        recyclerView.addItemDecoration(decoration);
 
         if (savedInstanceState != null) {
             actionMode = startSupportActionMode(new ActionModeCallback());

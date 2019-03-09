@@ -3,6 +3,4 @@
 
     <item android:drawable="@color/selectedItemBackgroundColor" />
 
-    <item android:drawable="@drawable/border" />
-
 </layer-list>

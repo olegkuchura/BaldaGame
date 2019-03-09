@@ -3,6 +3,4 @@
 
     <item android:drawable="@android:color/transparent" />
 
-    <item android:drawable="@drawable/border" />
-
 </layer-list>
