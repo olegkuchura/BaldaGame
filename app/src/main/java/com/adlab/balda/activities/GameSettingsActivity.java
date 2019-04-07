@@ -13,9 +13,8 @@ import android.widget.TextView;
 
 import com.adlab.balda.contracts.GameSettingsContract;
 import com.adlab.balda.R;
-import com.adlab.balda.model.Game;
 import com.adlab.balda.model.GameLab;
-import com.adlab.balda.model.Player;
+import com.adlab.balda.model.GamePlayer;
 import com.adlab.balda.utils.PresenterManager;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -152,10 +151,9 @@ public class GameSettingsActivity extends AppCompatActivity implements GameSetti
     @Override
     public void showGameScreen(String word, int rowCount, int colCount) {
         GameLab gameLab = GameLab.getInstance();
-        Player[] players =  {null};
-        Game game = gameLab.createGame(rowCount, colCount, word, players, getApplicationContext());
-        game.start();
-        startActivity(GameActivity.createIntent(this, 0, rowCount, colCount));
+        GamePlayer player =  new GamePlayer();
+        gameLab.createGame(rowCount, colCount, word, player, getApplicationContext());
+        startActivity(GameActivity.createIntent(this, rowCount, colCount));
         finish();
     }
 

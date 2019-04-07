@@ -8,11 +8,11 @@
         android:toAlpha="1.0" >
     </alpha>
 
-    <translate
+    <!-- <translate
         android:duration="1500"
         android:fillAfter="false"
         android:startOffset="100"
-        android:toYDelta="-250" />
+        android:toYDelta="-250" /> -->
 
     <alpha
         android:duration="1000"

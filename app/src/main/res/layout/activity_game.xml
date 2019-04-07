@@ -13,6 +13,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+            app:title="@string/one_man_game"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:background="@color/colorPrimary"
@@ -36,14 +37,6 @@
             android:saveEnabled="false"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_score_anim"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            tools:text=" +5 points" />
-
-        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,6 +44,17 @@
             android:layout_centerHorizontal="true"
             android:textSize="24sp"
             tools:text="your score: 90" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_score_anim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="8dp"
+            android:textSize="20sp"
+            android:textColor="@color/colorAccent"
+            android:layout_toEndOf="@id/tv_score"
+            tools:text=" +5 points" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"

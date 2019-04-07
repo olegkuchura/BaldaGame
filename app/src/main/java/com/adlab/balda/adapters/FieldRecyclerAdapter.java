@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.adlab.balda.R;
 import com.adlab.balda.activities.Field;
+import com.adlab.balda.contracts.GameContract;
+import com.adlab.balda.presenters.GamePresenter;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
@@ -29,30 +31,28 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
 
     private OnItemClickListener listener;
 
-    private Field field;
+    private GameContract.Presenter mPresenter;
+
     private ColorStateList defaultTextColor;
 
-    private Context context;
+    private int mFieldSize;
 
-    public FieldRecyclerAdapter(Context context, Field field) {
-        this.field = field;
-        this.context = context;
+    public FieldRecyclerAdapter(GameContract.Presenter presenter, int fieldSize) {
+        mPresenter = presenter;
+        mFieldSize = fieldSize;
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public void setContext(Context context){
-        this.context = context;
-    }
 
-
+    @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.field_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.field_item, parent, false);
 
-        float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, itemSize, context.getResources().getDisplayMetrics());
+        float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, itemSize, parent.getContext().getResources().getDisplayMetrics());
         GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) view.getLayoutParams();
         params.height = (int) pixels;
         params.width = (int) pixels;
@@ -60,50 +60,21 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
 
         RecyclerViewHolder holder = new RecyclerViewHolder(view);
         if (defaultTextColor == null){
-            defaultTextColor = holder.textView.getTextColors();
+            defaultTextColor = holder.textViewLetter.getTextColors();
         }
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        if (position == field.getEnteredViewNumber()) {
-            holder.textView.setText(String.valueOf(field.getEnteredLetter()).toUpperCase());
-            holder.textView.setTextColor(defaultTextColor);
-        } else {
-            String letter = String.valueOf(field.getLetter(position)).toUpperCase();
-            holder.textView.setText(letter);
-            setTextColor(holder.textView, R.color.colorAccent);
-        }
-        int activeCellNumber = field.getActiveCellNumber(position);
-        if(activeCellNumber != -1){
-            holder.itemView.setActivated(true);
-            holder.textViewNumber.setText(String.valueOf(activeCellNumber + 1));
-        } else {
-            holder.itemView.setActivated(false);
-            holder.textViewNumber.setText("");
-        }
-        holder.itemView.setTag(position);
-        if (position == field.getSelectedViewNumber()) {
-            holder.itemView.setSelected(true);
-        } else {
-            holder.itemView.setSelected(false);
-        }
-    }
-
-    private void setBackgroundColor(View view, int colorId){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            view.setBackgroundColor(context.getColor(colorId));
-        } else {
-            view.setBackgroundColor(context.getResources().getColor(colorId));
-        }
+        mPresenter.bindCell(holder, position);
     }
 
     private void setTextColor(TextView view, @ColorRes int colorId){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            view.setTextColor(context.getColor(colorId));
+            view.setTextColor(view.getContext().getColor(colorId));
         } else {
-            view.setTextColor(context.getResources().getColor(colorId));
+            view.setTextColor(view.getContext().getResources().getColor(colorId));
         }
     }
 
@@ -114,22 +85,22 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
 
     @Override
     public int getItemCount() {
-        return field.getCellCount();
+        return mFieldSize;
     }
 
 
 
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, GameContract.CellView {
 
-        TextView textView;
+        TextView textViewLetter;
         TextView textViewNumber;
 
         RecyclerViewHolder(View itemView) {
             super(itemView);
 
-            textView = itemView.findViewById(R.id.field_item_text_view);
+            textViewLetter = itemView.findViewById(R.id.field_item_text_view);
             textViewNumber = itemView.findViewById(R.id.tv_number);
-            textView.setTextSize(textSize);
+            textViewLetter.setTextSize(textSize);
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
@@ -156,6 +127,39 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
                 }
             }
             return false;
+        }
+
+        @Override
+        public void showLetter(char letter) {
+            textViewLetter.setText(String.valueOf(letter).toUpperCase());
+            setTextColor(textViewLetter, R.color.colorAccent);
+        }
+
+        @Override
+        public void showEnteredLetter(char letter) {
+            textViewLetter.setText(String.valueOf(letter).toUpperCase());
+            textViewLetter.setTextColor(defaultTextColor);
+        }
+
+        @Override
+        public void select() {
+            itemView.setActivated(false);
+            textViewNumber.setText(null);
+            itemView.setSelected(true);
+        }
+
+        @Override
+        public void activate(int number) {
+            itemView.setSelected(false);
+            itemView.setActivated(true);
+            textViewNumber.setText(String.valueOf(number));
+        }
+
+        @Override
+        public void resetState() {
+            itemView.setSelected(false);
+            itemView.setActivated(false);
+            textViewNumber.setText(null);
         }
     }
 

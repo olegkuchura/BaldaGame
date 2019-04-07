@@ -2,6 +2,8 @@ package com.adlab.balda.model;
 
 import android.content.Context;
 
+import com.adlab.balda.utils.Injection;
+
 public class GameLab {
 
     private static GameLab gameLab = null;
@@ -13,14 +15,14 @@ public class GameLab {
         return gameLab;
     }
 
-    private Game game;
+    private OneManGame game;
 
-    public Game createGame(int rowCount, int colCount, String initWord, Player[] players, Context context) {
-        game = new Game(rowCount, colCount, initWord, players, context);
+    public OneManGame createGame(int rowCount, int colCount, String initWord, GamePlayer player, Context context) {
+        game = new OneManGame(rowCount, colCount, initWord, player, Injection.provideWordsRepository(context));
         return game;
     }
 
-    public Game getGame() {
+    public OneManGame getGame() {
         return game;
     }
 
