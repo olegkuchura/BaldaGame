@@ -23,8 +23,6 @@ public class GamePresenter implements GameContract.Presenter {
     private static final char EMPTY_CELL_VALUE = ' ';
     private static final int UNDEFINED_CELL_NUMBER = -1;
 
-    private WordsRepository mRepository;
-
     private GameContract.View mGameView;
 
     private OneManGame game;
@@ -39,8 +37,7 @@ public class GamePresenter implements GameContract.Presenter {
     private char mEnteredLetter;
     private LinkedList<Integer> mActiveCellNumbers;
 
-    public GamePresenter(@NonNull WordsRepository repository, @NonNull GameContract.View view) {
-        mRepository = repository;
+    public GamePresenter(@NonNull GameContract.View view) {
         mGameView = view;
 
         mGameView.setPresenter(this);

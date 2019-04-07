@@ -40,18 +40,9 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
 
 public class GameActivity extends AppCompatActivity implements GameContract.View, FieldRecyclerAdapter.OnItemClickListener{
-    private static final String SHARED_SETTINGS = "settings";
-    private static final String GAME_LANGUAGE = "gameLanguage";
-    private static final String DEFAULT_GAME_LANGUAGE= "ru";
-
-    private static final String ENTERED_ITEM = "enteredItem";
-    private static final String ENTERED_LETTER = "enteredLetter";
-    private static final String ACTIVE_VIEW_NUMBERS = "activeViewNumbers";
 
     public static final String ROW_COUNT = "rowCount";
     public static final String COL_COUNT = "colCount";
-    public static final String INIT_WORD = "initWord";
-    public static final String PLAYER_ID = "playerId";
 
     private GameContract.Presenter mPresenter;
 
@@ -92,7 +83,7 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
         editTextFieldItem = findViewById(R.id.et_input_field_item);
         textViewScoreAnim = findViewById(R.id.tv_score_anim);
 
-        PresenterManager.provideGamePresenter(this, this);
+        PresenterManager.provideGamePresenter(this);
 
         adapter = new FieldRecyclerAdapter(mPresenter, colCount * rowCount);
         adapter.setOnItemClickListener(this);
@@ -260,11 +251,10 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
     public void showMessage(GameContract.MessageType message) {
         switch (message) {
             case INCORRECT_SYMBOL:
-                // todo text in resources! and call showToast()
-                Toast.makeText(GameActivity.this, "It is not correct symbol", Toast.LENGTH_SHORT).show();
+                showToast(R.string.invalid_symbol);
                 break;
             case NEED_ENTER_LETTER:
-                showSnackbar(R.string.need_enter_word);
+                showSnackbar(R.string.enter_new_letter);
                 break;
             case MUST_CONTAIN_NEW_LETTER:
                 showSnackbar(R.string.must_contain_new_letter);

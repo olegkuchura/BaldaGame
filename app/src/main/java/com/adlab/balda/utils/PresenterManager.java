@@ -29,11 +29,9 @@ public class PresenterManager {
         mGameSettingsPresenter = null;
     }
 
-    public static void provideGamePresenter(@NonNull Context context, @NonNull GameContract.View view) {
+    public static void provideGamePresenter(@NonNull GameContract.View view) {
         if (mGamePresenter == null) {
-            mGamePresenter = new GamePresenter(
-                    Injection.provideWordsRepository(context.getApplicationContext()),
-                    view);
+            mGamePresenter = new GamePresenter(view);
         } else {
             mGamePresenter.setView(view);
         }

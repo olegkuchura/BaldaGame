@@ -20,7 +20,7 @@
     <string name="column_count">Column count:</string>
     <string name="start_game">Start game</string>
     <string name="non_existent_word">this is a non-existent word</string>
-    <string name="need_enter_word">need to enter a word</string>
+    <string name="need_enter_word">Need to enter a word</string>
 
     // --- SPLASH SCREEN ---
     <string name="database_creation">Database creation</string>
@@ -35,6 +35,7 @@
     <string name="no_such_word">There is no such word in the dictionary!</string>
     <string name="such_word_have_already_been_used">Such word have already been used in this game!</string>
     <string name="must_contain_new_letter">The word must contain a new letter!</string>
+    <string name="invalid_symbol">It is invalid symbol</string>
     // Animation
     <string name="plus_points"> +%1$d points</string>
     // Game end dialog
