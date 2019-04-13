@@ -4,7 +4,6 @@ package com.adlab.balda.presenters;
 import android.util.Log;
 
 import com.adlab.balda.contracts.GameContract;
-import com.adlab.balda.database.WordsRepository;
 import com.adlab.balda.model.GameLab;
 import com.adlab.balda.model.GamePlayer;
 import com.adlab.balda.model.OneManGame;
@@ -70,6 +69,8 @@ public class GamePresenter implements GameContract.Presenter {
 
     @Override
     public void start() {
+        mGameView.showField(mRowCount, mColCount);
+
         mGameView.updateScore(player.getScore());
 
         if (!mActiveCellNumbers.isEmpty()) {
@@ -82,7 +83,6 @@ public class GamePresenter implements GameContract.Presenter {
             mSelectedCellNumber = UNDEFINED_CELL_NUMBER;
             mGameView.updateCell(oldSelected);
         }
-        Log.d("TESTING", "GamePresenter -> start()");
     }
 
     @Override
@@ -110,7 +110,7 @@ public class GamePresenter implements GameContract.Presenter {
             if (cellNumber == mSelectedCellNumber) return;
             int oldSelectedCellNumber = mSelectedCellNumber;
             boolean isSelected = setSelectedCellNumber(cellNumber);
-            mGameView.updateCell(oldSelectedCellNumber);    // update old the cell
+            mGameView.updateCell(oldSelectedCellNumber);
             if (isSelected) {
                 mGameView.updateCell(cellNumber);
                 mGameView.showKeyboard();
@@ -161,7 +161,6 @@ public class GamePresenter implements GameContract.Presenter {
         } else {
             mGameView.scrollFieldToCell(mSelectedCellNumber);
         }
-        Log.d("TESTING", "GamePresenter -> onKeyboardOpen()");
     }
 
     @Override
@@ -169,7 +168,6 @@ public class GamePresenter implements GameContract.Presenter {
         int oldSelectedCellNumber = mSelectedCellNumber;
         mSelectedCellNumber = UNDEFINED_CELL_NUMBER;
         mGameView.updateCell(oldSelectedCellNumber);
-        Log.d("TESTING", "GamePresenter -> onKeyboardHidden() -> updatedCellNumber = " + oldSelectedCellNumber);
     }
 
     @Override
@@ -202,7 +200,6 @@ public class GamePresenter implements GameContract.Presenter {
             int removedCellNumber = mActiveCellNumbers.removeLast();
             mGameView.updateCell(removedCellNumber);
         }
-        Log.d("TESTING", "GamePresenter -> deactivateActionMode() -> mActiveCellNumbers.size = " + mActiveCellNumbers.size());
     }
 
     @Override
@@ -254,7 +251,7 @@ public class GamePresenter implements GameContract.Presenter {
     private boolean isCorrectChar(char c) {
         String gameLanguage = "ru";
         switch (gameLanguage) {
-            case "ru": return ((c >= 0x0430 && c<= 0x044F) || c == 0x0451);
+            case "ru": return ((c >= 0x0410 && c<= 0x044F) || c == 0x0451 || c == 0x0401);
             default:   return false;
         }
     }
@@ -290,11 +287,6 @@ public class GamePresenter implements GameContract.Presenter {
         return false;
     }
 
-    /**
-     *
-     * @param cellNumber
-     * @return true if there still are elements in mActiveCellNumbers list, false otherwise
-     */
     private void toggleActiveModeForCell(int cellNumber) {
         if (mItems[cellNumber] == EMPTY_CELL_VALUE && cellNumber != mEnteredCellNumber) {
             return;

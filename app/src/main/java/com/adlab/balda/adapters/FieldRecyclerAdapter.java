@@ -1,6 +1,5 @@
 package com.adlab.balda.adapters;
 
-import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.util.TypedValue;
@@ -11,9 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.adlab.balda.R;
-import com.adlab.balda.activities.Field;
 import com.adlab.balda.contracts.GameContract;
-import com.adlab.balda.presenters.GamePresenter;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
@@ -26,9 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdapter.RecyclerViewHolder> {
 
-    private final int itemSize = 65;
-    private final int textSize = 48;
-
     private OnItemClickListener listener;
 
     private GameContract.Presenter mPresenter;
@@ -36,26 +30,36 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
     private ColorStateList defaultTextColor;
 
     private int mFieldSize;
+    private int mItemSizePx;
+    private int mTextSize;
+    private int mNumberSize;
 
-    public FieldRecyclerAdapter(GameContract.Presenter presenter, int fieldSize) {
+    public FieldRecyclerAdapter(GameContract.Presenter presenter, int fieldSize, int itemSizePx, int textSize, int numberSize) {
         mPresenter = presenter;
         mFieldSize = fieldSize;
+        mItemSizePx = itemSizePx;
+        mTextSize = textSize;
+        mNumberSize = numberSize;
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
+    public void setSizeOfCell(int itemSizePx, int textSize, int numberSize) {
+        mItemSizePx = itemSizePx;
+        mTextSize = textSize;
+        mNumberSize = numberSize;
+    }
 
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.field_item, parent, false);
 
-        float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, itemSize, parent.getContext().getResources().getDisplayMetrics());
         GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) view.getLayoutParams();
-        params.height = (int) pixels;
-        params.width = (int) pixels;
+        params.height = mItemSizePx;
+        params.width = mItemSizePx;
         view.setLayoutParams(params);
 
         RecyclerViewHolder holder = new RecyclerViewHolder(view);
@@ -89,7 +93,6 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
     }
 
 
-
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, GameContract.CellView {
 
         TextView textViewLetter;
@@ -100,7 +103,8 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
 
             textViewLetter = itemView.findViewById(R.id.field_item_text_view);
             textViewNumber = itemView.findViewById(R.id.tv_number);
-            textViewLetter.setTextSize(textSize);
+            textViewLetter.setTextSize(mTextSize);
+            textViewNumber.setTextSize(mNumberSize);
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);

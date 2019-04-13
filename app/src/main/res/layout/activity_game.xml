@@ -65,20 +65,30 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="16dp"
             android:layout_centerHorizontal="true"
-
             app:cardElevation="4dp">
 
-            <HorizontalScrollView
+            <com.adlab.balda.widgets.BlockTouchEventLayout
+                android:id="@+id/touchEventLayout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scrollbars="none">
+                android:layout_height="wrap_content">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/activity_game_recycler_view"
+                <HorizontalScrollView
+                    android:id="@+id/scrollH"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:overScrollMode="never">
 
-            </HorizontalScrollView>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/activity_game_recycler_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:overScrollMode="never"
+                        android:scrollbars="none"/>
+
+                </HorizontalScrollView>
+
+            </com.adlab.balda.widgets.BlockTouchEventLayout>
 
         </androidx.cardview.widget.CardView>
 

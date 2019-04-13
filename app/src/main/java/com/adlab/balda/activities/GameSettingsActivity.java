@@ -153,7 +153,7 @@ public class GameSettingsActivity extends AppCompatActivity implements GameSetti
         GameLab gameLab = GameLab.getInstance();
         GamePlayer player =  new GamePlayer();
         gameLab.createGame(rowCount, colCount, word, player, getApplicationContext());
-        startActivity(GameActivity.createIntent(this, rowCount, colCount));
+        startActivity(GameActivity.createIntent(this));
         finish();
     }
 

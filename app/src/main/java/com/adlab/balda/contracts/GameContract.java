@@ -9,6 +9,8 @@ public interface GameContract {
 
     interface View extends BaseView<Presenter> {
 
+        void showField(int rowCount, int colCount);
+
         void updateCell(int cellNumber);
 
         void showKeyboard();

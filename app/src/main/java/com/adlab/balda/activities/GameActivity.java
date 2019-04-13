@@ -19,13 +19,16 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +37,7 @@ import com.adlab.balda.utils.PresenterManager;
 import com.adlab.balda.widgets.BorderDecoration;
 import com.adlab.balda.adapters.FieldRecyclerAdapter;
 import com.adlab.balda.R;
+import com.adlab.balda.widgets.BlockTouchEventLayout;
 import com.google.android.material.snackbar.Snackbar;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
@@ -41,8 +45,13 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventList
 
 public class GameActivity extends AppCompatActivity implements GameContract.View, FieldRecyclerAdapter.OnItemClickListener{
 
-    public static final String ROW_COUNT = "rowCount";
-    public static final String COL_COUNT = "colCount";
+    private final static int ITEM_SIZE = 64;
+    private final static int TEXT_SIZE = 48;
+    private final static int NUMBER_SIZE = 14;
+    private final static int DIVIDER_SIZE = 2;
+
+    private float itemSizePx;
+    private float dividerSizePx;
 
     private GameContract.Presenter mPresenter;
 
@@ -53,15 +62,15 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
     private EditText editTextFieldItem;
     private View viewContent;
     private TextView textViewScoreAnim;
+    private HorizontalScrollView horizontalScrollView;
+
     private FieldRecyclerAdapter adapter;
+    private GridLayoutManager layoutManager;
 
     private ActionMode actionMode = null;
 
-    public static Intent createIntent(Context context, int rowCount, int colCount) {
-        Intent intent = new Intent(context, GameActivity.class);
-        intent.putExtra(ROW_COUNT, rowCount);
-        intent.putExtra(COL_COUNT, colCount);
-        return intent;
+    public static Intent createIntent(Context context) {
+        return new Intent(context, GameActivity.class);
     }
 
     @Override
@@ -73,32 +82,21 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
 
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        Intent intent = getIntent();
-        int rowCount = intent.getIntExtra(ROW_COUNT, 5);
-        int colCount = intent.getIntExtra(COL_COUNT, 5);
+        itemSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ITEM_SIZE, getResources().getDisplayMetrics());
+        dividerSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DIVIDER_SIZE, getResources().getDisplayMetrics());
 
         viewContent = findViewById(R.id.content);
         recyclerView = findViewById(R.id.activity_game_recycler_view);
         textViewScore = findViewById(R.id.tv_score);
         editTextFieldItem = findViewById(R.id.et_input_field_item);
         textViewScoreAnim = findViewById(R.id.tv_score_anim);
-
-        PresenterManager.provideGamePresenter(this);
-
-        adapter = new FieldRecyclerAdapter(mPresenter, colCount * rowCount);
-        adapter.setOnItemClickListener(this);
-        adapter.setHasStableIds(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, colCount);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-        BorderDecoration decoration = new BorderDecoration(this, Color.GRAY, 2f, colCount);
-        recyclerView.addItemDecoration(decoration);
+        BlockTouchEventLayout touchEventLayout = findViewById(R.id.touchEventLayout);
+        horizontalScrollView = findViewById(R.id.scrollH);
 
         KeyboardVisibilityEvent.setEventListener(
                 this, new KeyboardVisibilityEventListener() {
                     @Override
                     public void onVisibilityChanged(boolean isOpen) {
-                        Log.d("TESTING", "GameActivity -> onVisibilityChanged() -> isOpen = " + isOpen);
                         if (isOpen) {
                             mPresenter.onKeyboardOpen();
                         } else {
@@ -107,12 +105,30 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
                     }
                 });
 
-        editTextFieldItem.addTextChangedListener(new SingleLetterTextWatcher());
-    }
+        touchEventLayout.setTouchListener(new BlockTouchEventLayout.TouchListener() {
+            private float mPosX = 0;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+            @Override
+            public void onTouch(MotionEvent ev) {
+                MotionEvent copy = MotionEvent.obtain(ev);
+                copy.offsetLocation(horizontalScrollView.getScrollX(), 0);
+                recyclerView.dispatchTouchEvent(copy);
+                switch (ev.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mPosX = ev.getX();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        horizontalScrollView.scrollBy((int)(mPosX - ev.getX()), 0);
+                        mPosX = ev.getX();
+                        break;
+                }
+            }
+        });
+
+        editTextFieldItem.addTextChangedListener(new SingleLetterTextWatcher());
+
+        PresenterManager.provideGamePresenter(this);
+
         mPresenter.start();
     }
 
@@ -123,6 +139,33 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
         if (isFinishing()) {
             PresenterManager.resetGamePresenter();
         }
+    }
+
+    @Override
+    public void onItemClick(View itemView, int position) {
+        mPresenter.onCellClicked(position);
+    }
+
+    @Override
+    public void onItemLongClick(View itemView, int position) {
+        mPresenter.onCellLongClicked(position);
+    }
+
+    @Override
+    public void onBackPressed() {
+        mPresenter.finishGame();
+    }
+
+    @Override
+    public void showField(int rowCount, int colCount) {
+        adapter = new FieldRecyclerAdapter(mPresenter, rowCount * colCount, (int) itemSizePx, TEXT_SIZE, NUMBER_SIZE);
+        adapter.setOnItemClickListener(this);
+        adapter.setHasStableIds(true);
+        layoutManager = new GridLayoutManager(this, colCount);
+        BorderDecoration decoration = new BorderDecoration(this, Color.GRAY, DIVIDER_SIZE, colCount);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(decoration);
     }
 
     @Override
@@ -144,21 +187,6 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
                     }
                 })
                 .create().show();
-    }
-
-    @Override
-    public void onItemClick(View itemView, int position) {
-        mPresenter.onCellClicked(position);
-    }
-
-    @Override
-    public void onItemLongClick(View itemView, int position) {
-        mPresenter.onCellLongClicked(position);
-    }
-
-    @Override
-    public void onBackPressed() {
-        mPresenter.finishGame();
     }
 
     @Override
@@ -197,16 +225,52 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                recyclerView.smoothScrollToPosition(cellNumber);
+                horizontalScrollView.smoothScrollBy(calculateHorizontalOffset(cellNumber), 0);
+                recyclerView.smoothScrollBy(0, calculateVerticalOffset(cellNumber));
             }
         }, 100);
+    }
+
+    private int calculateHorizontalOffset(int cellNumber) {
+        int cellCol = cellNumber % layoutManager.getSpanCount();
+
+        int extraOffset = (int) (itemSizePx * 0.45);
+        int cellEnd = (int) (((cellCol + 1) * itemSizePx) + ((cellCol + 2) * dividerSizePx));
+        int cellStart = (int) ((cellCol * itemSizePx) + (cellCol * dividerSizePx));
+        int screenEnd = horizontalScrollView.getScrollX() + horizontalScrollView.getWidth();
+        int screenStart = horizontalScrollView.getScrollX();
+
+        if (cellEnd + extraOffset > screenEnd) {
+            return (cellEnd - screenEnd) + extraOffset;
+        } else if (cellStart - extraOffset < screenStart) {
+            return (cellStart - screenStart) - extraOffset;
+        } else {
+            return 0;
+        }
+    }
+
+    private int calculateVerticalOffset(int cellNumber) {
+        int cellRow = cellNumber / layoutManager.getSpanCount();
+
+        int extraOffset = (int) (itemSizePx * 0.45);
+        int cellEnd = (int) (((cellRow + 1) * itemSizePx) + ((cellRow + 2) * dividerSizePx));
+        int cellStart = (int) ((cellRow * itemSizePx) + (cellRow * dividerSizePx));
+        int screenEnd = recyclerView.computeVerticalScrollOffset() + recyclerView.getHeight();
+        int screenStart = recyclerView.computeVerticalScrollOffset();
+
+        if (cellEnd + extraOffset > screenEnd) {
+            return (cellEnd - screenEnd) + extraOffset;
+        } else if (cellStart - extraOffset < screenStart) {
+            return (cellStart - screenStart) - extraOffset;
+        } else {
+            return 0;
+        }
     }
 
     @Override
     public void hideKeyboard() {
         editTextFieldItem.requestFocus();
         imm.hideSoftInputFromWindow(editTextFieldItem.getWindowToken(), 0);
-        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -277,7 +341,7 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
         Toast.makeText(GameActivity.this, resId, Toast.LENGTH_SHORT).show();
     }
 
-    class SingleLetterTextWatcher implements TextWatcher {
+    private class SingleLetterTextWatcher implements TextWatcher {
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
@@ -327,7 +391,6 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
         public void onDestroyActionMode(ActionMode mode) {
             mPresenter.deactivateActionMode();
             actionMode = null;
-            Log.d("TESTING", "GameActivity -> onDestroyActionMode() ");
         }
     }
 }
