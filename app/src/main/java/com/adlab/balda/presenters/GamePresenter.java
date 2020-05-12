@@ -93,6 +93,12 @@ public class GamePresenter implements GameContract.Presenter {
             cellView.showLetter(mItems[cellNumber]);
         }
 
+        if (cellNumber == mEnteredCellNumber && mActiveCellNumbers.isEmpty()) {
+            cellView.showClearLetterButton();
+        } else {
+            cellView.hideClearLetterButton();
+        }
+
         cellView.resetState();
         if (cellNumber == mSelectedCellNumber) {
             cellView.select();
@@ -141,6 +147,8 @@ public class GamePresenter implements GameContract.Presenter {
             mGameView.showMessage(NEED_ENTER_LETTER);
             return;
         }
+
+        mGameView.updateCell(mEnteredCellNumber);
 
         boolean wasActiveModeActivated = !mActiveCellNumbers.isEmpty();
 
@@ -200,6 +208,7 @@ public class GamePresenter implements GameContract.Presenter {
             int removedCellNumber = mActiveCellNumbers.removeLast();
             mGameView.updateCell(removedCellNumber);
         }
+        mGameView.updateCell(mEnteredCellNumber);
     }
 
     @Override

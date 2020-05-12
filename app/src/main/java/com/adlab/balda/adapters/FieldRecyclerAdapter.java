@@ -14,6 +14,7 @@ import com.adlab.balda.contracts.GameContract;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -97,25 +98,33 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
 
         TextView textViewLetter;
         TextView textViewNumber;
+        AppCompatImageView imageViewClearLetter;
 
         RecyclerViewHolder(View itemView) {
             super(itemView);
 
             textViewLetter = itemView.findViewById(R.id.field_item_text_view);
             textViewNumber = itemView.findViewById(R.id.tv_number);
+            imageViewClearLetter = itemView.findViewById(R.id.iv_clear_letter);
             textViewLetter.setTextSize(mTextSize);
             textViewNumber.setTextSize(mNumberSize);
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
+
+            imageViewClearLetter.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             if (listener != null) {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    listener.onItemClick(itemView, position);
+                if (view.getId() == R.id.iv_clear_letter) {
+                    listener.onClearLetterClick();
+                } else {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(itemView, position);
+                    }
                 }
             }
         }
@@ -160,6 +169,16 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
         }
 
         @Override
+        public void showClearLetterButton() {
+            imageViewClearLetter.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void hideClearLetterButton() {
+            imageViewClearLetter.setVisibility(View.GONE);
+        }
+
+        @Override
         public void resetState() {
             itemView.setSelected(false);
             itemView.setActivated(false);
@@ -170,5 +189,6 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position);
         void onItemLongClick(View itemView, int position);
+        void onClearLetterClick();
     }
 }

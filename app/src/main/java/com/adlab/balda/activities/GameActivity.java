@@ -155,6 +155,13 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
     }
 
     @Override
+    public void onClearLetterClick() {
+        editTextFieldItem.setText("");
+        imm.restartInput(editTextFieldItem);
+        mPresenter.clearEnteredLetter();
+    }
+
+    @Override
     public void onBackPressed() {
         mPresenter.finishGame();
     }

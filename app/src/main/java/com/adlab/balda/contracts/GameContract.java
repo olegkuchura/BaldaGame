@@ -47,6 +47,10 @@ public interface GameContract {
 
         void activate(int number);
 
+        void showClearLetterButton();
+
+        void hideClearLetterButton();
+
         void resetState();
 
     }
