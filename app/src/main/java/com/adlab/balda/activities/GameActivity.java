@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -62,6 +63,7 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
     private EditText editTextFieldItem;
     private View viewContent;
     private TextView textViewScoreAnim;
+    private CardView cardViewScoreAnim;
     private HorizontalScrollView horizontalScrollView;
 
     private FieldRecyclerAdapter adapter;
@@ -90,6 +92,7 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
         textViewScore = findViewById(R.id.tv_score);
         editTextFieldItem = findViewById(R.id.et_input_field_item);
         textViewScoreAnim = findViewById(R.id.tv_score_anim);
+        cardViewScoreAnim = findViewById(R.id.cv_score_anim);
         BlockTouchEventLayout touchEventLayout = findViewById(R.id.touchEventLayout);
         horizontalScrollView = findViewById(R.id.scrollH);
 
@@ -276,19 +279,19 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
     @Override
     public void showScoreAnimation(int deltaScore) {
         textViewScoreAnim.setText(getString(R.string.plus_points, deltaScore));
-        textViewScoreAnim.setVisibility(View.VISIBLE);
+        cardViewScoreAnim.setVisibility(View.VISIBLE);
         Animation animation = AnimationUtils.loadAnimation(GameActivity.this, R.anim.score);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {  }
             @Override
             public void onAnimationEnd(Animation animation) {
-                textViewScoreAnim.setVisibility(View.INVISIBLE);
+                cardViewScoreAnim.setVisibility(View.INVISIBLE);
             }
             @Override
             public void onAnimationRepeat(Animation animation) {  }
         });
-        textViewScoreAnim.startAnimation(animation);
+        cardViewScoreAnim.startAnimation(animation);
     }
 
     @Override

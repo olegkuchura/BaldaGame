@@ -11,6 +11,7 @@
     <string name="description_title">Title Balda</string>
 
     // --- GAME SETTINGS SCREEN ---
+    <string name="settings_for_one_man_game">Settings for one-man game</string>
     // Block titles
     <string name="choose_field_size">Choose field size</string>
     <string name="enter_init_word">Enter the initial word</string>
@@ -47,9 +48,9 @@
     <string name="start_new_game">Start a new game</string>
     // Exit from game dialog
     <string name="exit">Exit</string>
-    <string name="exit_game_message">Do you want to finish this game?\nIt will not be saved</string>
+    <string name="exit_game_message">Do you want to finish this game?\nIt will not be saved!</string>
     <string name="finish">Yes, finish the game</string>
     <!-- <string name="back_to_the_game">No, back to the game</string> -->
-    <string name="back_to_the_game">No, go back</string>
+    <string name="back_to_the_game">No, continue</string>
 
 </resources>

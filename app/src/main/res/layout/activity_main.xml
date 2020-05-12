@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/repeat_background">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:title="Balda game"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,20 +34,21 @@
         android:orientation="vertical"
         tools:context="com.adlab.balda.activities.MainActivity">
 
-        <ImageView
+        <!-- <ImageView
             android:id="@+id/iv_balda_activity_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/description_title"
-            android:src="@drawable/balda_image" />
+            android:src="@drawable/balda_image" /> -->
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/b_one_man_game"
             style="@style/MainMenuButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/start_one_man_game" />
 
         <com.google.android.material.button.MaterialButton
@@ -57,3 +79,4 @@
 </ScrollView>
 
 
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

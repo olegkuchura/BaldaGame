@@ -41,7 +41,7 @@ public class GameSettingsActivity extends AppCompatActivity implements GameSetti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_settings);
 
-        getSupportActionBar().setTitle("Settings for single game");
+        getSupportActionBar().setTitle(R.string.settings_for_one_man_game);
 
         mButtonIncreaseRowCount = findViewById(R.id.b_increase_row_count);
         mButtonReduceRowCount = findViewById(R.id.b_reduce_row_count);

@@ -28,7 +28,7 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
-    <style name="MainMenuButton" parent="Widget.MaterialComponents.Button.TextButton">
+    <style name="MainMenuButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textSize">22sp</item>
         <item name="android:layout_marginStart">8dp</item>
         <item name="android:layout_marginEnd">8dp</item>

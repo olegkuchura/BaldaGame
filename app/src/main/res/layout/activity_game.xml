@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/repeat_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -29,37 +30,63 @@
 
         <EditText
             android:id="@+id/et_input_field_item"
-            android:layout_width="0dp"
+            android:layout_width="1dp"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
             android:singleLine="true"
             android:ems="5"
-            android:saveEnabled="false"/>
+            android:saveEnabled="false"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:alpha="0"
+            />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_score"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_centerHorizontal="true"
-            android:textSize="24sp"
-            tools:text="your score: 90" />
+            app:cardCornerRadius="32dp">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_score_anim"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                tools:text="your score: 90"
+                android:textColor="@color/colorAccent"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_score_anim"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:layout_marginStart="8dp"
-            android:textSize="20sp"
-            android:textColor="@color/colorAccent"
-            android:layout_toEndOf="@id/tv_score"
-            tools:text=" +5 points" />
+            android:layout_marginEnd="8dp"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            app:cardCornerRadius="32dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_score_anim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/colorAccent"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                tools:text=" +5 points" />
+        </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_score"
+            android:layout_below="@id/cv_score"
             android:layout_marginBottom="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginStart="5dp"
