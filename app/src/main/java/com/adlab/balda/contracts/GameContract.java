@@ -3,6 +3,8 @@ package com.adlab.balda.contracts;
 import com.adlab.balda.BasePresenter;
 import com.adlab.balda.BaseView;
 
+import java.util.List;
+
 import androidx.annotation.NonNull;
 
 public interface GameContract {
@@ -30,6 +32,8 @@ public interface GameContract {
         void showMessage(MessageType message);
 
         void showScoreAnimation(int deltaScore);
+
+        void updateUsedWords(List<String> listOfWords);
 
         void showGameResult(int score);
 

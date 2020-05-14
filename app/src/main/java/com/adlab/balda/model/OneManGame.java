@@ -2,6 +2,10 @@ package com.adlab.balda.model;
 
 import com.adlab.balda.database.WordsDataSource;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class OneManGame {
 
     private static final char EMPTY_CELL_VALUE = ' ';
@@ -41,6 +45,13 @@ public class OneManGame {
 
     public GamePlayer getPlayer() {
         return player;
+    }
+
+    public List<String> getUsedWords() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add(initWord);
+        list.addAll(player.getEnteredWords());
+        return list;
     }
 
     public void makeMove(final int enteredCellNumber, final char enteredLetter, int[] cellsWithWord, final MakeMoveCallback callback) {
@@ -109,9 +120,7 @@ public class OneManGame {
 
     private char[] generateInitialFiledData(int rowCount, int colCount, String initWord) {
         char[] items = new char[rowCount * colCount];
-        for (int i = 0; i < items.length; i++) {
-            items[i] = EMPTY_CELL_VALUE;
-        }
+        Arrays.fill(items, EMPTY_CELL_VALUE);
         int beginningOfMiddleRow = (rowCount / 2) * colCount;
         int j = beginningOfMiddleRow;
         for (int i = 0; i < initWord.length(); i++, j++) {

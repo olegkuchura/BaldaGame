@@ -1,126 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/repeat_background">
+    tools:openDrawer="start">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            app:title="@string/one_man_game"
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <RelativeLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.adlab.balda.activities.GameActivity">
+        android:background="@drawable/repeat_background">
 
-        <EditText
-            android:id="@+id/et_input_field_item"
-            android:layout_width="1dp"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
-            android:singleLine="true"
-            android:ems="5"
-            android:saveEnabled="false"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="10dp"
-            android:alpha="0"
-            />
+        <RelativeLayout
+            android:id="@+id/rl_content_game"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:context="com.adlab.balda.activities.GameActivity">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_centerHorizontal="true"
-            app:cardCornerRadius="32dp">
+            <EditText
+                android:id="@+id/et_input_field_item"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:alpha="0"
+                android:ems="5"
+                android:imeOptions="actionDone"
+                android:saveEnabled="false"
+                android:singleLine="true" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_score"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                tools:text="your score: 90"
-                android:textColor="@color/colorAccent"/>
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="32dp">
 
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_score_anim"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:layout_marginEnd="8dp"
-            android:layout_alignParentEnd="true"
-            android:visibility="invisible"
-            tools:visibility="visible"
-            app:cardCornerRadius="32dp">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_score_anim"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textColor="@color/colorAccent"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                tools:text=" +5 points" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cv_score"
-            android:layout_marginBottom="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="16dp"
-            android:layout_centerHorizontal="true"
-            app:cardElevation="4dp">
-
-            <com.adlab.balda.widgets.BlockTouchEventLayout
-                android:id="@+id/touchEventLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <HorizontalScrollView
-                    android:id="@+id/scrollH"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scrollbars="none"
-                    android:overScrollMode="never">
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="24sp"
+                    tools:text="your score: 90" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/activity_game_recycler_view"
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_score_anim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="8dp"
+                android:visibility="invisible"
+                app:cardCornerRadius="32dp"
+                tools:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_score_anim"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp"
+                    tools:text=" +5 points" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cv_score"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                app:cardElevation="4dp">
+
+                <com.adlab.balda.widgets.BlockTouchEventLayout
+                    android:id="@+id/touchEventLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <HorizontalScrollView
+                        android:id="@+id/scrollH"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:overScrollMode="never"
-                        android:scrollbars="none"/>
+                        android:scrollbars="none">
 
-                </HorizontalScrollView>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/activity_game_recycler_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:overScrollMode="never"
+                            android:scrollbars="none" />
 
-            </com.adlab.balda.widgets.BlockTouchEventLayout>
+                    </HorizontalScrollView>
 
-        </androidx.cardview.widget.CardView>
+                </com.adlab.balda.widgets.BlockTouchEventLayout>
 
-    </RelativeLayout>
+            </androidx.cardview.widget.CardView>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </RelativeLayout>
 
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:title="@string/one_man_game" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/used_words"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

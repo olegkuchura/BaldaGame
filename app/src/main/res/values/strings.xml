@@ -29,8 +29,10 @@
     // --- GAME SCREEN ---
     <string name="score">Your score: %1$d</string>
     // Toolbar
-    <string name="confirm">Confirm</string>
     <string name="one_man_game">One-man game</string>
+    <string name="confirm">Confirm</string>
+    <string name="show_used_words">Show used words</string>
+    <string name="used_words">Used words:</string>
     // Tooltips
     <string name="enter_new_letter">First you need to enter a new letter</string>
     <string name="no_such_word">There is no such word in the dictionary!</string>

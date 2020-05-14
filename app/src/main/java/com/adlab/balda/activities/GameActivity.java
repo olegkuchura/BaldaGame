@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,10 +40,13 @@ import com.adlab.balda.widgets.BorderDecoration;
 import com.adlab.balda.adapters.FieldRecyclerAdapter;
 import com.adlab.balda.R;
 import com.adlab.balda.widgets.BlockTouchEventLayout;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
+
+import java.util.List;
 
 public class GameActivity extends AppCompatActivity implements GameContract.View, FieldRecyclerAdapter.OnItemClickListener{
 
@@ -65,6 +69,9 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
     private TextView textViewScoreAnim;
     private CardView cardViewScoreAnim;
     private HorizontalScrollView horizontalScrollView;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private TextView textViewUsedWords;
 
     private FieldRecyclerAdapter adapter;
     private GridLayoutManager layoutManager;
@@ -87,7 +94,7 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
         itemSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ITEM_SIZE, getResources().getDisplayMetrics());
         dividerSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DIVIDER_SIZE, getResources().getDisplayMetrics());
 
-        viewContent = findViewById(R.id.content);
+        viewContent = findViewById(R.id.rl_content_game);
         recyclerView = findViewById(R.id.activity_game_recycler_view);
         textViewScore = findViewById(R.id.tv_score);
         editTextFieldItem = findViewById(R.id.et_input_field_item);
@@ -95,6 +102,29 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
         cardViewScoreAnim = findViewById(R.id.cv_score_anim);
         BlockTouchEventLayout touchEventLayout = findViewById(R.id.touchEventLayout);
         horizontalScrollView = findViewById(R.id.scrollH);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        textViewUsedWords = navigationView.getHeaderView(0).findViewById(R.id.tv_used_words);
+
+        viewContent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideKeyboard();
+            }
+        });
+
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {}
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+                hideKeyboard();
+            }
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {}
+            @Override
+            public void onDrawerStateChanged(int newState) {}
+        });
 
         KeyboardVisibilityEvent.setEventListener(
                 this, new KeyboardVisibilityEventListener() {
@@ -145,6 +175,24 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_game, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.used_words:
+                drawerLayout.openDrawer(navigationView);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onItemClick(View itemView, int position) {
         mPresenter.onCellClicked(position);
     }
@@ -163,7 +211,11 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
 
     @Override
     public void onBackPressed() {
-        mPresenter.finishGame();
+        if (drawerLayout.isDrawerOpen(navigationView)) {
+            drawerLayout.closeDrawer(navigationView);
+        } else {
+            mPresenter.finishGame();
+        }
     }
 
     @Override
@@ -299,6 +351,15 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
             public void onAnimationRepeat(Animation animation) {  }
         });
         cardViewScoreAnim.startAnimation(animation);
+    }
+
+    @Override
+    public void updateUsedWords(List<String> listOfWords) {
+        StringBuilder r = new StringBuilder();
+        for (String s : listOfWords) {
+            r.append(s).append('\n');
+        }
+        textViewUsedWords.setText(r.toString().toUpperCase());
     }
 
     @Override

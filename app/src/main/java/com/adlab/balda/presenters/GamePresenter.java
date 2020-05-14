@@ -73,6 +73,8 @@ public class GamePresenter implements GameContract.Presenter {
 
         mGameView.updateScore(player.getScore());
 
+        mGameView.updateUsedWords(game.getUsedWords());
+
         if (!mActiveCellNumbers.isEmpty()) {
             mGameView.activateActionMode();
             mGameView.updateActivatedLetterSequence(getEnteredLetterSequence());
@@ -229,6 +231,7 @@ public class GamePresenter implements GameContract.Presenter {
                     mGameView.deactivateActionMode();
                     mGameView.updateScore(player.getScore());
                     mGameView.showScoreAnimation(player.getScore() - oldScore);
+                    mGameView.updateUsedWords(game.getUsedWords());
                 }
 
                 @Override
