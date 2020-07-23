@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--<color name="colorPrimary">#3F51B5</color> -->
-    <color name="colorPrimary">#757575</color>
+    <color name="colorPrimary">@color/grayDark1</color>
     <!--<color name="colorPrimaryDark">#303F9F</color> -->
-    <color name="colorPrimaryDark">#424242</color>
+    <color name="colorPrimaryDark">@color/grayDark2</color>
     <!--<color name="colorAccent">#FF4081</color> -->
-    <color name="colorAccent">#26A69A</color>
+    <color name="colorAccent">@color/green2</color>
 
-    <color name="selectedItemBackgroundColor">#E0E0E0</color>
+    <color name="defaultItemBackgroundColor">@color/white</color>
+    <color name="selectedItemBackgroundColor">@color/grayLight2</color>
+    <color name="activatedItemBackgroundColor">@color/green1</color>
 
-    <color name="activatedItemBackgroundColor">#E0F2F1</color>
+    <color name="letterNew">@color/grayDark2</color>
+    <color name="letterOld">@color/green2</color>
 
+    <color name="border">@color/grayDark1</color>
+
+    <color name="backgroundScreen">@color/grayLight1</color>
+
+    <color name="colorError">@color/red</color>
+    <color name="disabledColor">@color/grayLight3</color>
+
+    <color name="red">#CF0000</color>
+
+    <color name="green1">#E0F2F1</color>
+    <color name="green2">#26A69A</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="grayLight1">#ECEBEB</color>
+    <color name="grayLight2">#E0E0E0</color>
+    <color name="grayLight3">#C3C3C3</color>
+    <color name="grayDark1">#757575</color>
+    <color name="grayDark2">#424242</color>
+    <color name="black">#000000</color>
 
 </resources>

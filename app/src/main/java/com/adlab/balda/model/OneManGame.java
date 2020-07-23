@@ -1,30 +1,41 @@
 package com.adlab.balda.model;
 
 import com.adlab.balda.database.WordsDataSource;
+import com.adlab.balda.enums.FieldSizeType;
+import com.adlab.balda.enums.FieldType;
+import com.adlab.balda.model.field.AbstractField;
+import com.adlab.balda.model.field.ClassicField;
+import com.adlab.balda.model.field.HexagonField;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class OneManGame {
 
     private static final char EMPTY_CELL_VALUE = ' ';
 
-    private char[] field;
+    //private char[] field;
+    //private FieldType fieldType;
+    private AbstractField field;
     private int rowCount;
     private int colCount;
-    private String initWord;
+    //private String initWord;
     private GamePlayer player;
 
     private WordsDataSource wordsRepository;
 
-    public OneManGame(int rowCount, int colCount, String initWord, GamePlayer player, WordsDataSource wordsRepository) {
-        this.rowCount = rowCount;
-        this.colCount = colCount;
-        this.initWord = initWord;
+    public OneManGame(String initWord, FieldSizeType fieldSize, FieldType fieldType, GamePlayer player, WordsDataSource wordsRepository) {
+        this.rowCount = fieldSize.intValue();
+        this.colCount = fieldSize.intValue();
+        //this.initWord = initWord;
+        //this.fieldType = fieldType;
         this.player = player;
         this.wordsRepository = wordsRepository;
-        this.field = generateInitialFiledData(rowCount, colCount, initWord);
+        if (fieldType == FieldType.SQUARE) {
+            field = new ClassicField(initWord, fieldSize);
+        } else {
+            field = new HexagonField(initWord, fieldSize);
+        }
     }
 
     public int getRowCount() {
@@ -35,12 +46,8 @@ public class OneManGame {
         return colCount;
     }
 
-    public char[] getField() {
-        char[] buffer = new char[field.length];
-        for (int i = 0; i < field.length; i++) {
-            buffer[i] = field[i];
-        }
-        return buffer;
+    public char[] getCopyOfCells() {
+        return field.getCopyOfCells();
     }
 
     public GamePlayer getPlayer() {
@@ -49,15 +56,15 @@ public class OneManGame {
 
     public List<String> getUsedWords() {
         ArrayList<String> list = new ArrayList<>();
-        list.add(initWord);
+        list.add(field.getInitWord());
         list.addAll(player.getEnteredWords());
         return list;
     }
 
     public void makeMove(final int enteredCellNumber, final char enteredLetter, int[] cellsWithWord, final MakeMoveCallback callback) {
-        final String enteredWord = getEnteredWord(enteredCellNumber, enteredLetter, cellsWithWord);
+        final String enteredWord = field.getEnteredWord(enteredCellNumber, enteredLetter, cellsWithWord);
 
-        if (initWord.equals(enteredWord)) {
+        if (field.getInitWord().equals(enteredWord)) {
             callback.onWordIsAlreadyUsed();
             return;
         }
@@ -90,43 +97,20 @@ public class OneManGame {
     private boolean applyMove(int enteredCellNumber, char enteredLetter, String enteredWord) {
         player.increaseScore(enteredWord.length());
         player.addEnteredWord(enteredWord);
-        field[enteredCellNumber] = enteredLetter;
+        field.setLetter(enteredCellNumber, enteredLetter);
         return isGameFinish();
     }
 
     private boolean isGameFinish() {
-        for (char c: field) {
-            if (c == EMPTY_CELL_VALUE) {
-                return false;
-            }
-        }
-        return true;
+        return field.isFieldFull();
     }
 
-    private String getEnteredWord(int enteredCellNumber, char enteredLetter, int[] cellsWithWord) {
-        StringBuilder wordBuilder = new StringBuilder();
-
-        for (int cell : cellsWithWord) {
-            if (cell == enteredCellNumber) {
-                wordBuilder.append(enteredLetter);
-            } else {
-                wordBuilder.append(field[cell]);
-            }
-        }
-
-        return wordBuilder.toString();
+    public FieldType getFieldType() {
+        return field.getFieldType();
     }
 
-
-    private char[] generateInitialFiledData(int rowCount, int colCount, String initWord) {
-        char[] items = new char[rowCount * colCount];
-        Arrays.fill(items, EMPTY_CELL_VALUE);
-        int beginningOfMiddleRow = (rowCount / 2) * colCount;
-        int j = beginningOfMiddleRow;
-        for (int i = 0; i < initWord.length(); i++, j++) {
-            items[j] = initWord.charAt(i);
-        }
-        return items;
+    public FieldSizeType getFieldSize() {
+        return field.getFieldSize();
     }
 
     public interface MakeMoveCallback {

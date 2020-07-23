@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,12 +35,18 @@ import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.adlab.balda.adapters.BaseFieldAdapter;
+import com.adlab.balda.adapters.HexagonFieldRecyclerAdapter;
 import com.adlab.balda.contracts.GameContract;
+import com.adlab.balda.databinding.ActivityGameBinding;
+import com.adlab.balda.enums.FieldSizeType;
+import com.adlab.balda.enums.FieldType;
 import com.adlab.balda.utils.PresenterManager;
 import com.adlab.balda.widgets.BorderDecoration;
 import com.adlab.balda.adapters.FieldRecyclerAdapter;
 import com.adlab.balda.R;
 import com.adlab.balda.widgets.BlockTouchEventLayout;
+import com.adlab.balda.widgets.BorderDecorationHexagon;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -48,10 +55,11 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventList
 
 import java.util.List;
 
-public class GameActivity extends AppCompatActivity implements GameContract.View, FieldRecyclerAdapter.OnItemClickListener{
+public class GameActivity extends AppCompatActivity
+        implements GameContract.View, BaseFieldAdapter.OnFieldItemClickListener {
 
     private final static int ITEM_SIZE = 64;
-    private final static int TEXT_SIZE = 48;
+    private final static int TEXT_SIZE = 46;
     private final static int NUMBER_SIZE = 14;
     private final static int DIVIDER_SIZE = 2;
 
@@ -60,20 +68,13 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
 
     private GameContract.Presenter mPresenter;
 
+    private ActivityGameBinding binding;
+
     private InputMethodManager imm;
 
-    private RecyclerView recyclerView;
-    private TextView textViewScore;
-    private EditText editTextFieldItem;
-    private View viewContent;
-    private TextView textViewScoreAnim;
-    private CardView cardViewScoreAnim;
-    private HorizontalScrollView horizontalScrollView;
-    private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
     private TextView textViewUsedWords;
 
-    private FieldRecyclerAdapter adapter;
+    private RecyclerView.Adapter adapter;
     private GridLayoutManager layoutManager;
 
     private ActionMode actionMode = null;
@@ -85,35 +86,24 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_game);
+        setSupportActionBar(binding.toolbar);
 
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         itemSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ITEM_SIZE, getResources().getDisplayMetrics());
         dividerSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DIVIDER_SIZE, getResources().getDisplayMetrics());
 
-        viewContent = findViewById(R.id.rl_content_game);
-        recyclerView = findViewById(R.id.activity_game_recycler_view);
-        textViewScore = findViewById(R.id.tv_score);
-        editTextFieldItem = findViewById(R.id.et_input_field_item);
-        textViewScoreAnim = findViewById(R.id.tv_score_anim);
-        cardViewScoreAnim = findViewById(R.id.cv_score_anim);
-        BlockTouchEventLayout touchEventLayout = findViewById(R.id.touchEventLayout);
-        horizontalScrollView = findViewById(R.id.scrollH);
-        drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
-        textViewUsedWords = navigationView.getHeaderView(0).findViewById(R.id.tv_used_words);
+        textViewUsedWords = binding.navView.getHeaderView(0).findViewById(R.id.tv_used_words);
 
-        viewContent.setOnClickListener(new View.OnClickListener() {
+        binding.clContentGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hideKeyboard();
             }
         });
 
-        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+        binding.drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {}
             @Override
@@ -138,27 +128,27 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
                     }
                 });
 
-        touchEventLayout.setTouchListener(new BlockTouchEventLayout.TouchListener() {
+        binding.touchEventLayout.setTouchListener(new BlockTouchEventLayout.TouchListener() {
             private float mPosX = 0;
 
             @Override
             public void onTouch(MotionEvent ev) {
                 MotionEvent copy = MotionEvent.obtain(ev);
-                copy.offsetLocation(horizontalScrollView.getScrollX(), 0);
-                recyclerView.dispatchTouchEvent(copy);
+                copy.offsetLocation(binding.scrollH.getScrollX(), 0);
+                binding.activityGameRecyclerView.dispatchTouchEvent(copy);
                 switch (ev.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         mPosX = ev.getX();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        horizontalScrollView.scrollBy((int)(mPosX - ev.getX()), 0);
+                        binding.scrollH.scrollBy((int)(mPosX - ev.getX()), 0);
                         mPosX = ev.getX();
                         break;
                 }
             }
         });
 
-        editTextFieldItem.addTextChangedListener(new SingleLetterTextWatcher());
+        binding.etInputFieldItem.addTextChangedListener(new SingleLetterTextWatcher());
 
         PresenterManager.provideGamePresenter(this);
 
@@ -185,7 +175,7 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.used_words:
-                drawerLayout.openDrawer(navigationView);
+                binding.drawerLayout.openDrawer(binding.navView);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -204,51 +194,50 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
 
     @Override
     public void onClearLetterClick() {
-        editTextFieldItem.setText("");
-        imm.restartInput(editTextFieldItem);
+        binding.etInputFieldItem.setText("");
+        imm.restartInput(binding.etInputFieldItem);
         mPresenter.clearEnteredLetter();
     }
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(navigationView)) {
-            drawerLayout.closeDrawer(navigationView);
+        if (binding.drawerLayout.isDrawerOpen(binding.navView)) {
+            binding.drawerLayout.closeDrawer(binding.navView);
         } else {
             mPresenter.finishGame();
         }
     }
 
     @Override
-    public void showField(int rowCount, int colCount) {
-        adapter = new FieldRecyclerAdapter(mPresenter, rowCount * colCount, (int) itemSizePx, TEXT_SIZE, NUMBER_SIZE);
-        adapter.setOnItemClickListener(this);
+    public void showField(int rowCount, final int colCount, FieldType fieldType, FieldSizeType fieldSize) {
+        adapter = makeAdapterByType(fieldType, fieldSize, colCount);
+        ((BaseFieldAdapter)adapter).setOnItemClickListener(this);
         adapter.setHasStableIds(true);
         layoutManager = new GridLayoutManager(this, colCount);
-        BorderDecoration decoration = new BorderDecoration(this, Color.GRAY, DIVIDER_SIZE, colCount);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(decoration);
+        if (fieldType == FieldType.HEXAGON) {
+            layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    int size = 1;
+                    if ((position - colCount) % (colCount * 2 - 1) == 0) {
+                        size = 2;
+                    }
+                    return size;
+                }
+            });
+        }
+        RecyclerView.ItemDecoration decoration = makeItemDecorationByType(fieldType, colCount);
+        binding.activityGameRecyclerView.setLayoutManager(layoutManager);
+        binding.activityGameRecyclerView.setAdapter(adapter);
+        binding.activityGameRecyclerView.addItemDecoration(decoration);
     }
 
     @Override
     public void showGameResult(int score) {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.congratulations)
-                .setMessage(getString(R.string.filled_whole_field, score))
-                .setPositiveButton(R.string.back_to_menu, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                })
-                .setNegativeButton(R.string.start_new_game, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        startActivity(GameSettingsActivity.createIntent(GameActivity.this));
-                        finish();
-                    }
-                })
-                .create().show();
+        binding.tvScore.setVisibility(View.GONE);
+        binding.tvCongratulations.setVisibility(View.VISIBLE);
+        binding.tvYouFilledField.setText(getString(R.string.filled_whole_field, score));
+        binding.tvYouFilledField.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -278,8 +267,8 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
 
     @Override
     public void showKeyboard() {
-        editTextFieldItem.requestFocus();
-        imm.showSoftInput(editTextFieldItem, InputMethodManager.SHOW_FORCED);
+        binding.etInputFieldItem.requestFocus();
+        imm.showSoftInput(binding.etInputFieldItem, InputMethodManager.SHOW_FORCED);
     }
 
     @Override
@@ -287,8 +276,8 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                horizontalScrollView.smoothScrollBy(calculateHorizontalOffset(cellNumber), 0);
-                recyclerView.smoothScrollBy(0, calculateVerticalOffset(cellNumber));
+                binding.scrollH.smoothScrollBy(calculateHorizontalOffset(cellNumber), 0);
+                binding.activityGameRecyclerView.smoothScrollBy(0, calculateVerticalOffset(cellNumber));
             }
         }, 100);
     }
@@ -299,8 +288,8 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
         int extraOffset = (int) (itemSizePx * 0.45);
         int cellEnd = (int) (((cellCol + 1) * itemSizePx) + ((cellCol + 2) * dividerSizePx));
         int cellStart = (int) ((cellCol * itemSizePx) + (cellCol * dividerSizePx));
-        int screenEnd = horizontalScrollView.getScrollX() + horizontalScrollView.getWidth();
-        int screenStart = horizontalScrollView.getScrollX();
+        int screenEnd = binding.scrollH.getScrollX() + binding.scrollH.getWidth();
+        int screenStart = binding.scrollH.getScrollX();
 
         if (cellEnd + extraOffset > screenEnd) {
             return (cellEnd - screenEnd) + extraOffset;
@@ -317,8 +306,8 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
         int extraOffset = (int) (itemSizePx * 0.45);
         int cellEnd = (int) (((cellRow + 1) * itemSizePx) + ((cellRow + 2) * dividerSizePx));
         int cellStart = (int) ((cellRow * itemSizePx) + (cellRow * dividerSizePx));
-        int screenEnd = recyclerView.computeVerticalScrollOffset() + recyclerView.getHeight();
-        int screenStart = recyclerView.computeVerticalScrollOffset();
+        int screenEnd = binding.activityGameRecyclerView.computeVerticalScrollOffset() + binding.activityGameRecyclerView.getHeight();
+        int screenStart = binding.activityGameRecyclerView.computeVerticalScrollOffset();
 
         if (cellEnd + extraOffset > screenEnd) {
             return (cellEnd - screenEnd) + extraOffset;
@@ -331,26 +320,26 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
 
     @Override
     public void hideKeyboard() {
-        editTextFieldItem.requestFocus();
-        imm.hideSoftInputFromWindow(editTextFieldItem.getWindowToken(), 0);
+        binding.etInputFieldItem.requestFocus();
+        imm.hideSoftInputFromWindow(binding.etInputFieldItem.getWindowToken(), 0);
     }
 
     @Override
     public void showScoreAnimation(int deltaScore) {
-        textViewScoreAnim.setText(getString(R.string.plus_points, deltaScore));
-        cardViewScoreAnim.setVisibility(View.VISIBLE);
+        binding.tvScoreAnim.setText(getString(R.string.plus_points, deltaScore));
+        binding.cvScoreAnim.setVisibility(View.VISIBLE);
         Animation animation = AnimationUtils.loadAnimation(GameActivity.this, R.anim.score);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {  }
             @Override
             public void onAnimationEnd(Animation animation) {
-                cardViewScoreAnim.setVisibility(View.INVISIBLE);
+                binding.cvScoreAnim.setVisibility(View.INVISIBLE);
             }
             @Override
             public void onAnimationRepeat(Animation animation) {  }
         });
-        cardViewScoreAnim.startAnimation(animation);
+        binding.cvScoreAnim.startAnimation(animation);
     }
 
     @Override
@@ -379,7 +368,7 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
 
     @Override
     public void updateScore(int score) {
-        textViewScore.setText(getString(R.string.score, score));
+        binding.tvScore.setText(getString(R.string.score, score));
     }
 
     @Override
@@ -404,12 +393,28 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
     }
 
     private void showSnackbar(@StringRes int resId, Object... values) {
-        Snackbar.make(viewContent, getString(resId, values), Snackbar.LENGTH_LONG)
+        Snackbar.make(binding.clContentGame, getString(resId, values), Snackbar.LENGTH_LONG)
                 .show();
     }
 
     private void showToast(@StringRes int resId) {
         Toast.makeText(GameActivity.this, resId, Toast.LENGTH_SHORT).show();
+    }
+
+    private RecyclerView.Adapter makeAdapterByType(FieldType fieldType, FieldSizeType fieldSize, int colCount) {
+        if (fieldType == FieldType.SQUARE) {
+            return new FieldRecyclerAdapter(mPresenter, fieldSize, (int) itemSizePx, TEXT_SIZE, NUMBER_SIZE);
+        } else {
+            return new HexagonFieldRecyclerAdapter(mPresenter, colCount, fieldSize, (int) (itemSizePx + (itemSizePx/4)), TEXT_SIZE, NUMBER_SIZE);
+        }
+    }
+
+    private RecyclerView.ItemDecoration makeItemDecorationByType(FieldType fieldType, int colCount) {
+        if (fieldType == FieldType.SQUARE) {
+            return new BorderDecoration(this, DIVIDER_SIZE, colCount);
+        } else {
+            return new BorderDecorationHexagon(this, DIVIDER_SIZE, colCount);
+        }
     }
 
     private class SingleLetterTextWatcher implements TextWatcher {
@@ -425,7 +430,7 @@ public class GameActivity extends AppCompatActivity implements GameContract.View
             if (iLen > 1){
                 editable.delete(0, 1);
             }
-            imm.restartInput(editTextFieldItem);
+            imm.restartInput(binding.etInputFieldItem);
 
             if (iLen != 0){
                 mPresenter.enterLetter(editable.charAt(0));

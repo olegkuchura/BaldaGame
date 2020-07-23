@@ -2,6 +2,8 @@ package com.adlab.balda.contracts;
 
 import com.adlab.balda.BasePresenter;
 import com.adlab.balda.BaseView;
+import com.adlab.balda.enums.FieldSizeType;
+import com.adlab.balda.enums.FieldType;
 
 import java.util.List;
 
@@ -11,7 +13,7 @@ public interface GameContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showField(int rowCount, int colCount);
+        void showField(int rowCount, int colCount, FieldType fieldType, FieldSizeType fieldSize);
 
         void updateCell(int cellNumber);
 

@@ -15,6 +15,7 @@
     // Block titles
     <string name="choose_field_size">Choose field size</string>
     <string name="enter_init_word">Enter the initial word</string>
+    <string name="choose_field_type">Choose field type</string>
 
     <string name="init_word">Initial word</string>
     <string name="row_count">Row count:</string>
@@ -22,6 +23,7 @@
     <string name="start_game">Start game</string>
     <string name="non_existent_word">this is a non-existent word</string>
     <string name="need_enter_word">Need to enter a word</string>
+    <string name="non_appropriate_word_length">length of word must be %d for this field</string>
 
     // --- SPLASH SCREEN ---
     <string name="database_creation">Database creation</string>

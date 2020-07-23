@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.adlab.balda.contracts.GameContract;
 import com.adlab.balda.contracts.GameSettingsContract;
-import com.adlab.balda.database.BaldaDataBase;
 import com.adlab.balda.presenters.GamePresenter;
 import com.adlab.balda.presenters.GameSettingsPresenter;
 

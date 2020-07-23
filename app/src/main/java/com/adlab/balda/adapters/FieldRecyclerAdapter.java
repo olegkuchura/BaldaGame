@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import com.adlab.balda.R;
 import com.adlab.balda.contracts.GameContract;
+import com.adlab.balda.enums.FieldSizeType;
+
+import org.jetbrains.annotations.NotNull;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
@@ -22,20 +25,20 @@ import androidx.recyclerview.widget.RecyclerView;
  * Created by Oleg on 07.08.2018.
  */
 
-public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdapter.RecyclerViewHolder> {
+public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdapter.RecyclerViewHolder> implements BaseFieldAdapter {
 
-    private OnItemClickListener listener;
+    private OnFieldItemClickListener listener;
 
     private GameContract.Presenter mPresenter;
 
     private ColorStateList defaultTextColor;
 
-    private int mFieldSize;
+    private FieldSizeType mFieldSize;
     private int mItemSizePx;
     private int mTextSize;
     private int mNumberSize;
 
-    public FieldRecyclerAdapter(GameContract.Presenter presenter, int fieldSize, int itemSizePx, int textSize, int numberSize) {
+    public FieldRecyclerAdapter(GameContract.Presenter presenter, FieldSizeType fieldSize, int itemSizePx, int textSize, int numberSize) {
         mPresenter = presenter;
         mFieldSize = fieldSize;
         mItemSizePx = itemSizePx;
@@ -43,7 +46,8 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
         mNumberSize = numberSize;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    @Override
+    public void setOnItemClickListener(@NotNull OnFieldItemClickListener listener) {
         this.listener = listener;
     }
 
@@ -90,7 +94,7 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
 
     @Override
     public int getItemCount() {
-        return mFieldSize;
+        return mFieldSize.intValue() * mFieldSize.intValue();
     }
 
 

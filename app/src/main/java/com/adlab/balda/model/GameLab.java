@@ -2,6 +2,8 @@ package com.adlab.balda.model;
 
 import android.content.Context;
 
+import com.adlab.balda.enums.FieldSizeType;
+import com.adlab.balda.enums.FieldType;
 import com.adlab.balda.utils.Injection;
 
 public class GameLab {
@@ -17,8 +19,8 @@ public class GameLab {
 
     private OneManGame game;
 
-    public OneManGame createGame(int rowCount, int colCount, String initWord, GamePlayer player, Context context) {
-        game = new OneManGame(rowCount, colCount, initWord, player, Injection.provideWordsRepository(context));
+    public OneManGame createGame(String initWord, FieldSizeType fieldSize, FieldType fieldType, GamePlayer player, Context context) {
+        game = new OneManGame(initWord, fieldSize, fieldType, player, Injection.provideWordsRepository(context));
         return game;
     }
 

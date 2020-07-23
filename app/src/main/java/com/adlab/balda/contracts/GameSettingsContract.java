@@ -2,6 +2,8 @@ package com.adlab.balda.contracts;
 
 import com.adlab.balda.BasePresenter;
 import com.adlab.balda.BaseView;
+import com.adlab.balda.enums.FieldSizeType;
+import com.adlab.balda.enums.FieldType;
 
 import androidx.annotation.NonNull;
 
@@ -15,23 +17,21 @@ public interface GameSettingsContract {
 
         void showEmptyWordError();
 
+        void showNonAppropriateWordLength(int correctLength);
+
+        void hideNonAppropriateWordLength();
+
         void hideInitWordError();
 
-        void setRowCount(int rowCount);
+        void updateFiledSize(FieldSizeType sizeType, boolean withAnim, boolean biggerValue);
 
-        void setColCount(int colCount);
+        void setIncreaseFieldSizeEnabled(boolean enabled);
 
-        void setIncreaseRowCountEnabled(boolean enabled);
-
-        void setReduceRowCountEnabled(boolean enabled);
-
-        void setIncreaseColCountEnabled(boolean enabled);
-
-        void setReduceColCountEnabled(boolean enabled);
+        void setReduceFieldSizeEnabled(boolean enabled);
 
         void setStartGameEnabled(boolean enabled);
 
-        void showGameScreen(String word, int rowCount, int colCount);
+        void navigateToGameScreen(String word, FieldSizeType fieldSize, FieldType fieldType);
     }
 
     interface Presenter extends BasePresenter {
@@ -44,13 +44,11 @@ public interface GameSettingsContract {
 
         void generateRandomWord();
 
-        void increaseRowCount();
+        void increaseFieldSize();
 
-        void reduceRowCount();
+        void reduceFieldSize();
 
-        void increaseColumnCount();
-
-        void reduceColumnCount();
+        void fieldTypeChanged(FieldType fieldType);
 
         void startGame();
 

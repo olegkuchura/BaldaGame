@@ -4,8 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.TypedValue;
 import android.view.View;
+
+import com.adlab.balda.R;
+import com.adlab.balda.utils.ViewUtilsKt;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.FloatRange;
@@ -21,16 +25,17 @@ public class BorderDecoration extends RecyclerView.ItemDecoration {
      * Create a decoration that draws a line in the given color and width between the items in the grid.
      *
      * @param context  a context to access the resources.
-     * @param color    the color of the separator to draw.
      * @param spacingDp the thickness of the separator in dp.
      */
-    public BorderDecoration(@NonNull Context context, @ColorInt int color,
+    public BorderDecoration(@NonNull Context context,
                             @FloatRange(from = 0, fromInclusive = false) float spacingDp, int spanCount) {
         mPaint = new Paint();
-        mPaint.setColor(color);
-        final float thickness = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                spacingDp, context.getResources().getDisplayMetrics());
-        mPaint.setStrokeWidth(thickness);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mPaint.setColor(context.getResources().getColor(R.color.border, context.getTheme()));
+        } else {
+            mPaint.setColor(context.getResources().getColor(R.color.border));
+        }
+        mPaint.setStrokeWidth(ViewUtilsKt.dpToPx(context, spacingDp));
         mSpanCount = spanCount;
     }
 
