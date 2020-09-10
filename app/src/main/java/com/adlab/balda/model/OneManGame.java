@@ -24,7 +24,8 @@ public class OneManGame {
 
     private WordsDataSource wordsRepository;
 
-    public OneManGame(String initWord, FieldSizeType fieldSize, FieldType fieldType, GamePlayer player, WordsDataSource wordsRepository) {
+    public OneManGame(String initWord, FieldSizeType fieldSize, FieldType fieldType,
+                      GamePlayer player, WordsDataSource wordsRepository) {
         this.rowCount = fieldSize.intValue();
         this.colCount = fieldSize.intValue();
         //this.initWord = initWord;
@@ -95,7 +96,6 @@ public class OneManGame {
 
     // return true if game is finished and false otherwise
     private boolean applyMove(int enteredCellNumber, char enteredLetter, String enteredWord) {
-        player.increaseScore(enteredWord.length());
         player.addEnteredWord(enteredWord);
         field.setLetter(enteredCellNumber, enteredLetter);
         return isGameFinish();

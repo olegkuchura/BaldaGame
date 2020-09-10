@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.adlab.balda.R;
+import com.adlab.balda.enums.GameType;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -35,13 +36,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.b_one_man_game:
-                startGameSettingsActivity();
+                startGameSettingsActivity(GameType.SINGLE);
                 break;
             case R.id.b_game_with_android:
                 Toast.makeText(this, "Sorry, but game with Android isn't available yet", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.b_game_with_friends:
-                Toast.makeText(this, "Sorry, but game with friends isn't available yet", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Sorry, but game with friends isn't available yet", Toast.LENGTH_SHORT).show();
+                startGameSettingsActivity(GameType.MULTIPLAYER);
                 break;
             case R.id.b_settings:
                 Toast.makeText(this, "Sorry, but settings aren't available yet", Toast.LENGTH_SHORT).show();
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void startGameSettingsActivity() {
-        startActivity(GameSettingsActivity.createIntent(this));
+    private void startGameSettingsActivity(GameType gameType) {
+        startActivity(GameSettingsActivity.createIntent(this, gameType));
     }
 }

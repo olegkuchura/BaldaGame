@@ -3,9 +3,11 @@ package com.adlab.balda.presenters;
 
 import android.util.Log;
 
+import com.adlab.balda.contracts.CellView;
 import com.adlab.balda.contracts.GameContract;
 import com.adlab.balda.enums.FieldSizeType;
 import com.adlab.balda.enums.FieldType;
+import com.adlab.balda.enums.GameMessageType;
 import com.adlab.balda.model.GameLab;
 import com.adlab.balda.model.GamePlayer;
 import com.adlab.balda.model.OneManGame;
@@ -17,11 +19,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 
-import static com.adlab.balda.contracts.GameContract.MessageType.INCORRECT_SYMBOL;
-import static com.adlab.balda.contracts.GameContract.MessageType.MUST_CONTAIN_NEW_LETTER;
-import static com.adlab.balda.contracts.GameContract.MessageType.NEED_ENTER_LETTER;
-import static com.adlab.balda.contracts.GameContract.MessageType.NO_SUCH_WORD;
-import static com.adlab.balda.contracts.GameContract.MessageType.WORD_ALREADY_USED;
 import static com.adlab.balda.utils.UtilsKt.isCorrectChar;
 
 public class GamePresenter implements GameContract.Presenter {
@@ -81,7 +78,7 @@ public class GamePresenter implements GameContract.Presenter {
     }
 
     @Override
-    public void bindCell(@NonNull GameContract.CellView cellView, int cellNumber) {
+    public void bindCell(@NonNull CellView cellView, int cellNumber) {
         if (cellNumber == field.getEnteredCellNumber()) {
             cellView.showEnteredLetter(field.getEnteredLetter());
         } else {
@@ -140,7 +137,7 @@ public class GamePresenter implements GameContract.Presenter {
         }
 
         if (!field.getHasEnteredLetter()) {
-            mGameView.showMessage(NEED_ENTER_LETTER);
+            mGameView.showMessage(GameMessageType.NEED_ENTER_LETTER);
             return;
         }
 
@@ -186,7 +183,7 @@ public class GamePresenter implements GameContract.Presenter {
                 mGameView.updateCell(oldEnteredCellNumber);
             }
         } else {
-            mGameView.showMessage(INCORRECT_SYMBOL);
+            mGameView.showMessage(GameMessageType.INCORRECT_SYMBOL);
         }
     }
 
@@ -217,12 +214,12 @@ public class GamePresenter implements GameContract.Presenter {
 
                 @Override
                 public void onWordIsNotExist() {
-                    mGameView.showMessage(NO_SUCH_WORD);
+                    mGameView.showMessage(GameMessageType.NO_SUCH_WORD);
                 }
 
                 @Override
                 public void onWordIsAlreadyUsed() {
-                    mGameView.showMessage(WORD_ALREADY_USED);
+                    mGameView.showMessage(GameMessageType.WORD_ALREADY_USED);
                 }
 
                 @Override
@@ -234,7 +231,7 @@ public class GamePresenter implements GameContract.Presenter {
             });
 
         } else {
-            mGameView.showMessage(MUST_CONTAIN_NEW_LETTER);
+            mGameView.showMessage(GameMessageType.MUST_CONTAIN_NEW_LETTER);
         }
     }
 
@@ -253,7 +250,7 @@ public class GamePresenter implements GameContract.Presenter {
         }
         mGameView.deactivateActionMode();
         mGameView.updateScore(player.getScore());
-        mGameView.showScoreAnimation(player.getScore() - oldScore);
+        //mGameView.showScoreAnimation(player.getScore() - oldScore);
         mGameView.updateUsedWords(game.getUsedWords());
     }
 

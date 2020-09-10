@@ -4,6 +4,7 @@ import com.adlab.balda.BasePresenter;
 import com.adlab.balda.BaseView;
 import com.adlab.balda.enums.FieldSizeType;
 import com.adlab.balda.enums.FieldType;
+import com.adlab.balda.enums.GameMessageType;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public interface GameContract {
 
         void updateScore(int score);
 
-        void showMessage(MessageType message);
+        void showMessage(GameMessageType message);
 
         void showScoreAnimation(int deltaScore);
 
@@ -43,31 +44,11 @@ public interface GameContract {
 
     }
 
-    interface CellView {
-
-        void showLetter(char letter);
-
-        void showEnteredLetter(char letter);
-
-        void select();
-
-        void activate(int number);
-
-        void showClearLetterButton();
-
-        void hideClearLetterButton();
-
-        void resetState();
-
-    }
-
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter, BaseGamePresenter {
 
         void setView(@NonNull View view);
 
         void resetView();
-
-        void bindCell(@NonNull CellView cellView, int cellNumber);
 
         void onCellClicked(int cellNumber);
 
@@ -87,13 +68,5 @@ public interface GameContract {
 
         void finishGame();
 
-    }
-
-    enum MessageType {
-        INCORRECT_SYMBOL,
-        NEED_ENTER_LETTER,
-        MUST_CONTAIN_NEW_LETTER,
-        NO_SUCH_WORD,
-        WORD_ALREADY_USED
     }
 }

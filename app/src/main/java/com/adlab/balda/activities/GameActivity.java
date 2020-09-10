@@ -9,19 +9,15 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,8 +26,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,17 +35,19 @@ import com.adlab.balda.contracts.GameContract;
 import com.adlab.balda.databinding.ActivityGameBinding;
 import com.adlab.balda.enums.FieldSizeType;
 import com.adlab.balda.enums.FieldType;
+import com.adlab.balda.enums.GameMessageType;
 import com.adlab.balda.utils.PresenterManager;
 import com.adlab.balda.widgets.BorderDecoration;
 import com.adlab.balda.adapters.FieldRecyclerAdapter;
 import com.adlab.balda.R;
 import com.adlab.balda.widgets.BlockTouchEventLayout;
 import com.adlab.balda.widgets.BorderDecorationHexagon;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -103,17 +99,11 @@ public class GameActivity extends AppCompatActivity
             }
         });
 
-        binding.drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {}
+        binding.drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
                 hideKeyboard();
             }
-            @Override
-            public void onDrawerClosed(@NonNull View drawerView) {}
-            @Override
-            public void onDrawerStateChanged(int newState) {}
         });
 
         KeyboardVisibilityEvent.setEventListener(
@@ -183,12 +173,12 @@ public class GameActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemClick(View itemView, int position) {
+    public void onItemClick(@NotNull View itemView, int position) {
         mPresenter.onCellClicked(position);
     }
 
     @Override
-    public void onItemLongClick(View itemView, int position) {
+    public void onItemLongClick(@NotNull View itemView, int position) {
         mPresenter.onCellLongClicked(position);
     }
 
@@ -368,11 +358,11 @@ public class GameActivity extends AppCompatActivity
 
     @Override
     public void updateScore(int score) {
-        binding.tvScore.setText(getString(R.string.score, score));
+        binding.tvScore.setText(getString(R.string.your_score, score));
     }
 
     @Override
-    public void showMessage(GameContract.MessageType message) {
+    public void showMessage(GameMessageType message) {
         switch (message) {
             case INCORRECT_SYMBOL:
                 showToast(R.string.invalid_symbol);

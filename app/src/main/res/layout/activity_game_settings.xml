@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
+        android:id="@+id/sv_game_settings_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/backgroundScreen">
@@ -69,8 +70,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/stix_two_text"
                             android:inputType="textCapCharacters|textNoSuggestions"
-                            tools:text="БАЛДА"
-                            tools:ignore="HardcodedText" />
+                            tools:text="БАЛДА" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,6 +78,83 @@
 
             </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_players"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp">
+
+                <RelativeLayout
+                    android:id="@+id/rl_enter_players"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp">
+
+                    <TextView
+                        android:id="@+id/tv_enter_players"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/stix_two_text"
+                        android:text="@string/enter_players"
+                        android:textSize="28sp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_players"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_enter_players"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="0dp"
+                        android:orientation="horizontal"
+                        app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
+                        tools:itemCount="3"
+                        tools:listitem="@layout/item_player" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ib_add_player"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_below="@id/rv_players"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="10dp"
+                        android:tint="@color/colorAccent"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="8dp"
+                        android:scaleType="centerCrop"
+                        app:srcCompat="@drawable/ic_add" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/til_player_name"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/rv_players"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_toStartOf="@id/ib_add_player"
+                        android:hint="@string/player_name"
+                        app:errorEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_player_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/stix_two_text"
+                            android:maxLength="25"
+                            android:inputType="textPersonName|textCapWords|textNoSuggestions"
+                            tools:text="Jackson"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"

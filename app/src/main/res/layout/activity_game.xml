@@ -54,8 +54,8 @@
                     android:paddingEnd="16dp"
                     android:textColor="@color/colorAccent"
                     android:textSize="24sp"
-                    android:fontFamily="@font/stix_two_text"
-                    tools:text="your score: 90"/>
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    tools:text="Your score: 90"/>
 
                 <LinearLayout
                     android:id="@+id/ll_congratulations"
@@ -103,9 +103,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="8dp"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:cardCornerRadius="32dp"
-                tools:visibility="visible"
+                tools:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -121,19 +121,20 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:cardBackgroundColor="@android:color/transparent"
                 app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cv_score">
 
                 <com.adlab.balda.widgets.BlockTouchEventLayout
                     android:id="@+id/touchEventLayout"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal">
 
                     <HorizontalScrollView
                         android:id="@+id/scrollH"
@@ -146,13 +147,13 @@
                             android:id="@+id/activity_game_recycler_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:overScrollMode="never"
+                            android:padding="16dp"
+                            android:clipToPadding="false"
                             android:scrollbars="none"
+                            android:overScrollMode="never"
                             tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                             tools:spanCount="5"
                             tools:itemCount="25"
-                            tools:item_width="25dp"
-                            tools:item_height="25dp"
                             tools:listitem="@layout/field_item"/>
 
                     </HorizontalScrollView>

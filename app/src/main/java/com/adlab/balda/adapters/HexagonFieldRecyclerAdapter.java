@@ -11,7 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.adlab.balda.R;
-import com.adlab.balda.contracts.GameContract;
+import com.adlab.balda.contracts.BaseGamePresenter;
+import com.adlab.balda.contracts.CellView;
 import com.adlab.balda.enums.FieldSizeType;
 import com.adlab.balda.utils.HexagonViewUtilsKt;
 
@@ -30,7 +31,7 @@ public class HexagonFieldRecyclerAdapter extends RecyclerView.Adapter<HexagonFie
 
     private OnFieldItemClickListener listener;
 
-    private GameContract.Presenter mPresenter;
+    private BaseGamePresenter mPresenter;
 
     private ColorStateList defaultTextColor;
 
@@ -41,7 +42,7 @@ public class HexagonFieldRecyclerAdapter extends RecyclerView.Adapter<HexagonFie
     private int mTextSize;
     private int mNumberSize;
 
-    public HexagonFieldRecyclerAdapter(GameContract.Presenter presenter,
+    public HexagonFieldRecyclerAdapter(BaseGamePresenter presenter,
                                        int columnCount, FieldSizeType fieldSize, int itemSizePx, int textSize, int numberSize) {
         mPresenter = presenter;
         mColumnCount = columnCount;
@@ -121,7 +122,7 @@ public class HexagonFieldRecyclerAdapter extends RecyclerView.Adapter<HexagonFie
         return hexagonCellCountBySize(mFieldSize);
     }
 
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, GameContract.CellView {
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, CellView {
 
         TextView textViewLetter;
         TextView textViewNumber;

@@ -2,23 +2,35 @@ package com.adlab.balda.presenters
 
 import com.adlab.balda.DEFAULT_FIELD_SIZE
 import com.adlab.balda.DEFAULT_FIELD_TYPE
+import com.adlab.balda.adapters.PlayersAdapter
 import com.adlab.balda.contracts.GameSettingsContract
 import com.adlab.balda.database.WordsDataSource.GetWordCallback
 import com.adlab.balda.database.WordsRepository
 import com.adlab.balda.enums.FieldSizeType
 import com.adlab.balda.enums.FieldType
+import com.adlab.balda.enums.GameType
+import com.adlab.balda.model.GameLab
+import com.adlab.balda.model.GamePlayer
 
 class GameSettingsPresenter(
         private val repository: WordsRepository,
         private var viewState: GameSettingsContract.View?
 ) : GameSettingsContract.Presenter {
 
+    companion object {
+        private const val MAX_PLAYERS_COUNT = 5
+        private const val MIN_PLAYERS_COUNT = 2
+    }
+
     init {
         viewState?.setPresenter(this)
     }
-
+    private lateinit var mGameType: GameType
     private var mCurrentWord: String = ""
     private var mIsCurrentWordExist = false
+    private val mPlayers = ArrayList<GamePlayer>()
+//            .apply { add(GamePlayer("Rozmarin")); add(GamePlayer("Roman"))
+//                    add(GamePlayer("Marina")); add(GamePlayer("Jackson"))}
     private var mFieldSize = DEFAULT_FIELD_SIZE
     private var mFieldType = DEFAULT_FIELD_TYPE
     private val mWordLength: Int
@@ -36,12 +48,19 @@ class GameSettingsPresenter(
         viewState = null
     }
 
-    override fun start() {
+    override fun start() {}
+
+    override fun start(gameType: GameType) {
         if (isFirstStart) {
             isFirstStart = false
             generateRandomWord()
         }
         viewState?.updateFiledSize(mFieldSize, false, true)
+        mGameType = gameType
+        when(mGameType) {
+            GameType.SINGLE -> { viewState?.showPlayerNamesBlock(false) }
+            GameType.MULTIPLAYER -> { viewState?.showPlayerNamesBlock(true) }
+        }
     }
 
     override fun initWordChanged(newWord: String) {
@@ -84,6 +103,37 @@ class GameSettingsPresenter(
         })
     }
 
+    override fun bindPlayer(playerView: PlayersAdapter.PlayerView, position: Int) {
+        playerView.setPlayerName(mPlayers[position].nickname)
+    }
+
+    override fun onDeletePlayerClicked(position: Int) {
+        mPlayers.removeAt(position)
+        viewState?.playerDeleted(position)
+    }
+
+    override fun onAddPlayerClicked(playerName: String) {
+        val name = playerName.trim{ it == ' '}
+        if (name.isEmpty()) return
+        if (mPlayers.size >= MAX_PLAYERS_COUNT) {
+            viewState?.showPlayersCountErrorMax(MAX_PLAYERS_COUNT)
+            return
+        }
+        if (mPlayers.any { it.nickname == playerName}) {
+            viewState?.showAlreadyUsedNicknameError()
+            return
+        }
+        if(name.all{ it.isLetterOrDigit() || it == '_' ||  it == ' '}) {
+            mPlayers.add(GamePlayer(playerName))
+            viewState?.let { viewState ->
+                viewState.playerAdded()
+                viewState.setPlayerEdit("")
+            }
+        } else {
+            viewState?.showNicknameError()
+        }
+    }
+
     override fun increaseFieldSize() {
         mFieldSize = mFieldSize.increase()
         if (mFieldSize == FieldSizeType.maxValue()) {
@@ -113,8 +163,26 @@ class GameSettingsPresenter(
         }
     }
 
-    override fun startGame() {
-        viewState?.navigateToGameScreen(mCurrentWord, mFieldSize, mFieldType)
+    override fun startGameClicked() {
+        when(mGameType) {
+            GameType.SINGLE -> { createSingleGame() }
+            GameType.MULTIPLAYER -> {
+                if (mPlayers.size < MIN_PLAYERS_COUNT) {
+                    viewState?.showPlayersCountErrorMin(MIN_PLAYERS_COUNT)
+                    return
+                }
+                createMultiplayerGame()
+            }
+        }
+        viewState?.navigateToGameScreen(mGameType)
+    }
+
+    private fun createMultiplayerGame() {
+        GameLab.getInstance().createMultiplayerGame(mCurrentWord, mFieldSize, mFieldType, mPlayers)
+    }
+
+    private fun createSingleGame() {
+        GameLab.getInstance().createGame(mCurrentWord, mFieldSize, mFieldType, GamePlayer())
     }
 
     private fun setUpUIAfterChangeFieldSize(biggerValue: Boolean) {

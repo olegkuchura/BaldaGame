@@ -2,8 +2,10 @@ package com.adlab.balda.contracts;
 
 import com.adlab.balda.BasePresenter;
 import com.adlab.balda.BaseView;
+import com.adlab.balda.adapters.PlayersAdapter;
 import com.adlab.balda.enums.FieldSizeType;
 import com.adlab.balda.enums.FieldType;
+import com.adlab.balda.enums.GameType;
 
 import androidx.annotation.NonNull;
 
@@ -23,6 +25,22 @@ public interface GameSettingsContract {
 
         void hideInitWordError();
 
+        void showPlayerNamesBlock(boolean show);
+
+        void playerAdded();
+
+        void playerDeleted(int position);
+
+        void setPlayerEdit(String playerName);
+
+        void showNicknameError();
+
+        void showPlayersCountErrorMax(int playersCountLimit);
+
+        void showPlayersCountErrorMin(int playersCountLimit);
+
+        void showAlreadyUsedNicknameError();
+
         void updateFiledSize(FieldSizeType sizeType, boolean withAnim, boolean biggerValue);
 
         void setIncreaseFieldSizeEnabled(boolean enabled);
@@ -31,10 +49,12 @@ public interface GameSettingsContract {
 
         void setStartGameEnabled(boolean enabled);
 
-        void navigateToGameScreen(String word, FieldSizeType fieldSize, FieldType fieldType);
+        void navigateToGameScreen(GameType gameType);
     }
 
     interface Presenter extends BasePresenter {
+
+        void start(GameType gameType);
 
         void setView(@NonNull GameSettingsContract.View view);
 
@@ -44,14 +64,19 @@ public interface GameSettingsContract {
 
         void generateRandomWord();
 
+        void bindPlayer(@NonNull PlayersAdapter.PlayerView playerView, int position);
+
+        void onDeletePlayerClicked(int position);
+
+        void onAddPlayerClicked(@NonNull String playerName);
+
         void increaseFieldSize();
 
         void reduceFieldSize();
 
         void fieldTypeChanged(FieldType fieldType);
 
-        void startGame();
-
+        void startGameClicked();
     }
 
 }

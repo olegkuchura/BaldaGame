@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.adlab.balda.R;
-import com.adlab.balda.contracts.GameContract;
+import com.adlab.balda.contracts.BaseGamePresenter;
+import com.adlab.balda.contracts.CellView;
 import com.adlab.balda.enums.FieldSizeType;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,11 +26,12 @@ import androidx.recyclerview.widget.RecyclerView;
  * Created by Oleg on 07.08.2018.
  */
 
-public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdapter.RecyclerViewHolder> implements BaseFieldAdapter {
+public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdapter.RecyclerViewHolder>
+        implements BaseFieldAdapter {
 
     private OnFieldItemClickListener listener;
 
-    private GameContract.Presenter mPresenter;
+    private BaseGamePresenter mPresenter;
 
     private ColorStateList defaultTextColor;
 
@@ -38,7 +40,7 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
     private int mTextSize;
     private int mNumberSize;
 
-    public FieldRecyclerAdapter(GameContract.Presenter presenter, FieldSizeType fieldSize, int itemSizePx, int textSize, int numberSize) {
+    public FieldRecyclerAdapter(BaseGamePresenter presenter, FieldSizeType fieldSize, int itemSizePx, int textSize, int numberSize) {
         mPresenter = presenter;
         mFieldSize = fieldSize;
         mItemSizePx = itemSizePx;
@@ -98,7 +100,7 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
     }
 
 
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, GameContract.CellView {
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, CellView {
 
         TextView textViewLetter;
         TextView textViewNumber;
@@ -188,11 +190,5 @@ public class FieldRecyclerAdapter extends RecyclerView.Adapter<FieldRecyclerAdap
             itemView.setActivated(false);
             textViewNumber.setText(null);
         }
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View itemView, int position);
-        void onItemLongClick(View itemView, int position);
-        void onClearLetterClick();
     }
 }

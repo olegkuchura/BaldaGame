@@ -39,4 +39,14 @@
         <item name="android:paddingBottom">16dp</item>
     </style>
 
+    <style name="ChipPlayer" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="fontFamily">@font/montserrat_semi_bold</item>
+    </style>
+
+    <style name="ChipScore" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="fontFamily">@font/montserrat_semi_bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/grayDark2</item>
+    </style>
+
 </resources>

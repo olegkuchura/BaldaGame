@@ -9,8 +9,8 @@ interface BaseFieldAdapter {
     fun setOnItemClickListener(listener: OnFieldItemClickListener)
 
     interface OnFieldItemClickListener {
-        fun onItemClick(itemView: View?, position: Int)
-        fun onItemLongClick(itemView: View?, position: Int)
+        fun onItemClick(itemView: View, position: Int)
+        fun onItemLongClick(itemView: View, position: Int)
         fun onClearLetterClick()
     }
 

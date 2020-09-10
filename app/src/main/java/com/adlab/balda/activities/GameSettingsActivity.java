@@ -2,43 +2,49 @@ package com.adlab.balda.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
-import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.adlab.balda.adapters.PlayersAdapter;
 import com.adlab.balda.contracts.GameSettingsContract;
 import com.adlab.balda.R;
 import com.adlab.balda.databinding.ActivityGameSettingsBinding;
 import com.adlab.balda.enums.FieldSizeType;
 import com.adlab.balda.enums.FieldType;
-import com.adlab.balda.model.GameLab;
-import com.adlab.balda.model.GamePlayer;
+import com.adlab.balda.enums.GameType;
 import com.adlab.balda.utils.PresenterManager;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.flexbox.AlignItems;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.core.widget.TextViewCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-public class GameSettingsActivity extends AppCompatActivity implements GameSettingsContract.View, View.OnClickListener{
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+
+public class GameSettingsActivity extends AppCompatActivity
+        implements GameSettingsContract.View, View.OnClickListener{
+
+    @NotNull
+    public static Intent createIntent(Context context, @NotNull GameType gameType) {
+        Intent intent = new Intent(context, GameSettingsActivity.class);
+        intent.putExtra("gameType", gameType.toString());
+        return intent;
+    }
 
     private GameSettingsContract.Presenter mPresenter;
 
@@ -68,6 +74,7 @@ public class GameSettingsActivity extends AppCompatActivity implements GameSetti
         binding.bReduceFieldSize.setOnClickListener(this);
         binding.bStartGame.setOnClickListener(this);
         binding.ibGenerateWord.setOnClickListener(this);
+        binding.ibAddPlayer.setOnClickListener(this);
 
         binding.etInitWord.requestFocus();
 
@@ -94,13 +101,22 @@ public class GameSettingsActivity extends AppCompatActivity implements GameSetti
         });
 
         PresenterManager.provideGameSettingsPresenter(this, this);
+
+        binding.rvPlayers.setAdapter(new PlayersAdapter(mPresenter));
+
+        String param = getIntent().getStringExtra("gameType");
+        GameType gameType = GameType.SINGLE;
+        if (param != null) {
+            gameType = GameType.valueOf(param);
+        }
+        mPresenter.start(gameType);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mPresenter.start();
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mPresenter.start();
+//    }
 
     @Override
     public void setPresenter(@NonNull GameSettingsContract.Presenter presenter) {
@@ -140,6 +156,64 @@ public class GameSettingsActivity extends AppCompatActivity implements GameSetti
     }
 
     @Override
+    public void showPlayerNamesBlock(boolean show) {
+        int visibility;
+        if (show) visibility = View.VISIBLE;
+        else visibility = View.GONE;
+        binding.cvPlayers.setVisibility(visibility);
+    }
+
+    @Override
+    public void playerAdded() {
+        PlayersAdapter adapter = (PlayersAdapter) binding.rvPlayers.getAdapter();
+        if (adapter == null) return;
+        int playersCount = adapter.getPlayersCount() + 1;
+        adapter.setPlayersCount(playersCount);
+        adapter.notifyItemInserted(playersCount - 1);
+    }
+
+    @Override
+    public void playerDeleted(int position) {
+        PlayersAdapter adapter = (PlayersAdapter) binding.rvPlayers.getAdapter();
+        if (adapter == null) return;
+        int playersCount = adapter.getPlayersCount() - 1;
+        adapter.setPlayersCount(playersCount);
+        adapter.notifyItemRemoved(position);
+    }
+
+    @Override
+    public void setPlayerEdit(String playerName) {
+        binding.etPlayerName.setText(playerName);
+    }
+
+    @Override
+    public void showNicknameError() {
+        Snackbar.make(binding.svGameSettingsRoot, R.string.player_name_error, Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
+    public void showPlayersCountErrorMax(int playersCountLimit) {
+        Snackbar.make(binding.svGameSettingsRoot,
+                getString(R.string.player_name_count_limit_max, playersCountLimit), Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
+    public void showPlayersCountErrorMin(int playersCountLimit) {
+        Snackbar.make(binding.svGameSettingsRoot,
+                getString(R.string.player_name_count_limit_min, playersCountLimit), Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
+    public void showAlreadyUsedNicknameError() {
+        Snackbar.make(binding.svGameSettingsRoot,
+                getString(R.string.player_name_already_used), Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
     public void updateFiledSize(FieldSizeType sizeType, boolean withAnim, boolean biggerValue) {
         if (withAnim) {
             if (biggerValue) {
@@ -175,16 +249,11 @@ public class GameSettingsActivity extends AppCompatActivity implements GameSetti
     }
 
     @Override
-    public void navigateToGameScreen(String word, FieldSizeType fieldSize, FieldType fieldType) {
-        GameLab gameLab = GameLab.getInstance();
-        GamePlayer player =  new GamePlayer();
-        gameLab.createGame(word, fieldSize, fieldType, player, getApplicationContext());
-        startActivity(GameActivity.createIntent(this));
+    public void navigateToGameScreen(GameType gameType) {
+        startActivity(gameType == GameType.SINGLE ?
+                GameActivity.createIntent(this) :
+                MultiplayerGameActivity.createIntent(this));
         finish();
-    }
-
-    public static Intent createIntent(Context context) {
-        return new Intent(context, GameSettingsActivity.class);
     }
 
     @Override
@@ -209,7 +278,10 @@ public class GameSettingsActivity extends AppCompatActivity implements GameSetti
                 mPresenter.generateRandomWord();
                 break;
             case R.id.b_start_game:
-                mPresenter.startGame();
+                mPresenter.startGameClicked();
+                break;
+            case R.id.ib_add_player:
+                mPresenter.onAddPlayerClicked(Objects.requireNonNull(binding.etPlayerName.getText()).toString());
                 break;
         }
     }
