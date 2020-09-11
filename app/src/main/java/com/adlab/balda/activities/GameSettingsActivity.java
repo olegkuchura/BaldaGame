@@ -55,7 +55,15 @@ public class GameSettingsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_game_settings);
 
-        getSupportActionBar().setTitle(R.string.settings_for_one_man_game);
+        String param = getIntent().getStringExtra("gameType");
+        GameType gameType = GameType.SINGLE;
+        if (param != null) {
+            gameType = GameType.valueOf(param);
+        }
+        if (gameType == GameType.SINGLE)
+            Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.settings_for_one_man_game);
+        else
+            Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.settings_for_multiplayer_game);
 
         binding.etInitWord.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         binding.etInitWord.addTextChangedListener(new TextWatcher() {
@@ -104,11 +112,6 @@ public class GameSettingsActivity extends AppCompatActivity
 
         binding.rvPlayers.setAdapter(new PlayersAdapter(mPresenter));
 
-        String param = getIntent().getStringExtra("gameType");
-        GameType gameType = GameType.SINGLE;
-        if (param != null) {
-            gameType = GameType.valueOf(param);
-        }
         mPresenter.start(gameType);
     }
 
@@ -227,7 +230,17 @@ public class GameSettingsActivity extends AppCompatActivity
             binding.tvFieldSizeValue.setInAnimation(null);
             binding.tvFieldSizeValue.setOutAnimation(null);
         }
-        binding.tvFieldSizeValue.setText(sizeType.stringValue);
+        binding.tvFieldSizeValue.setText(getStringValueOfFieldSize(sizeType));
+    }
+
+    private String getStringValueOfFieldSize(@NotNull FieldSizeType sizeType) {
+        switch (sizeType) {
+            case SMALL: return getString(R.string.field_small);
+            case MEDIUM: return getString(R.string.field_medium);
+            case LARGE: return getString(R.string.field_large);
+            case EXTRA_LARGE: return getString(R.string.field_extra_large);
+        }
+        throw new IllegalArgumentException("Unknown field size");
     }
 
     @Override

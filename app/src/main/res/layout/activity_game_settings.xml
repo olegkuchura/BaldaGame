@@ -276,7 +276,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/stix_two_text"
-                            android:text="Square"
+                            android:text="@string/square"
                             android:textColor="@color/checked_color_selector"
                             android:textSize="24sp" />
 
@@ -286,7 +286,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:fontFamily="@font/stix_two_text"
-                            android:text="Hexagon"
+                            android:text="@string/hexagon"
                             android:textColor="@color/checked_color_selector"
                             android:textSize="24sp" />
                     </RadioGroup>

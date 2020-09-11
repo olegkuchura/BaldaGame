@@ -1,16 +1,10 @@
 package com.adlab.balda.enums;
 
 public enum FieldSizeType {
-    SMALL("Small"),
-    MEDIUM("Medium"),
-    LARGE("Large"),
-    EXTRA_LARGE("Extra Large");
-
-    public String stringValue;
-
-    FieldSizeType(String s) {
-        stringValue = s;
-    }
+    SMALL,
+    MEDIUM,
+    LARGE,
+    EXTRA_LARGE;
 
     public FieldSizeType increase() {
         switch (this) {
@@ -18,8 +12,8 @@ public enum FieldSizeType {
             case MEDIUM: return LARGE;
             case LARGE:
             case EXTRA_LARGE: return EXTRA_LARGE;
-            default: return SMALL;
         }
+        throw new IllegalStateException("Unknown field size");
     }
 
     public FieldSizeType reduce() {
@@ -28,8 +22,8 @@ public enum FieldSizeType {
             case MEDIUM: return SMALL;
             case LARGE: return MEDIUM;
             case EXTRA_LARGE: return LARGE;
-            default: return EXTRA_LARGE;
         }
+        throw new IllegalStateException("Unknown field size");
     }
 
     public static FieldSizeType maxValue() {
@@ -46,7 +40,7 @@ public enum FieldSizeType {
             case MEDIUM: return 5;
             case LARGE: return 7;
             case EXTRA_LARGE: return 9;
-            default: return 5;
         }
+        throw new IllegalStateException("Unknown field size");
     }
 }

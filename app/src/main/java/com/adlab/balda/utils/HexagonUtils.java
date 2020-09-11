@@ -22,11 +22,11 @@ public class HexagonUtils {
 
     public static int hexagonCellCountBySize(FieldSizeType fieldSize) {
         //TODO calculate hexagonCellCountBySize
-        switch (fieldSize.stringValue) {
-            case "Small": return 8;
-            case "Medium": return 23;
-            case "Large": return 46;
-            case "Extra Large": return 77;
+        switch (fieldSize) {
+            case SMALL: return 8;
+            case MEDIUM: return 23;
+            case LARGE: return 46;
+            case EXTRA_LARGE: return 77;
             default:
                 throw new IllegalStateException("Unexpected value: " + fieldSize);
         }
@@ -34,11 +34,11 @@ public class HexagonUtils {
 
     public static int hexagonBeginningCell(FieldSizeType fieldSize) {
         //TODO calculate hexagonBeginningCell
-        switch (fieldSize.stringValue) {
-            case "Small": return 3;
-            case "Medium": return 9;
-            case "Large": return 20;
-            case "Extra Large": return 34;
+        switch (fieldSize) {
+            case SMALL: return 3;
+            case MEDIUM: return 9;
+            case LARGE: return 20;
+            case EXTRA_LARGE: return 34;
             default:
                 throw new IllegalStateException("Unexpected value: " + fieldSize);
         }
