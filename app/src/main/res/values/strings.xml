@@ -45,6 +45,7 @@
     <string name="multiplayer_game">Multiplayer game</string>
     <string name="confirm">Confirm</string>
     <string name="show_used_words">Show used words</string>
+    <string name="show_move_hint">Show move hint</string>
     <string name="used_words">Used words:</string>
     // Tooltips
     <string name="enter_new_letter">First you need to add a new letter on field</string>
@@ -54,6 +55,10 @@
     <string name="invalid_symbol">It is invalid symbol</string>
     // Animation
     <string name="plus_points"> +%1$d points</string>
+    // Hint
+    <string name="hint_value">Hint: %s</string>
+    <string name="hide">Hide</string>
+    <string name="apply">Apply</string>
     // Game end dialog
     <string name="congratulations">Congratulations</string>
     <string name="congratulations_nickname">%s won: %d</string>
@@ -68,5 +73,8 @@
     <string name="finish">Yes, finish the game</string>
     <!-- <string name="back_to_the_game">No, back to the game</string> -->
     <string name="back_to_the_game">No, continue</string>
+
+
+    <string name="not_implemented">Sorry, this function isn\'t implemented yet</string>
 
 </resources>

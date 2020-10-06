@@ -13,3 +13,13 @@ fun Char.isCorrectChar(): Boolean {
 fun log(message: String) {
     Log.d("AndroidRuntime", message)
 }
+
+fun log(list: List<String>, divider: String = "\n") {
+    val strBuilder = StringBuilder().apply {
+        list.forEachIndexed { index, s ->
+            append(s)
+            if (index != list.size-1) append(divider)
+        }
+    }
+    Log.d("AndroidRuntime", strBuilder.toString())
+}

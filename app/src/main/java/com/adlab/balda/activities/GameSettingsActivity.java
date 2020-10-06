@@ -108,6 +108,7 @@ public class GameSettingsActivity extends AppCompatActivity
             }
         });
 
+        //todo remove context in params
         PresenterManager.provideGameSettingsPresenter(this, this);
 
         binding.rvPlayers.setAdapter(new PlayersAdapter(mPresenter));

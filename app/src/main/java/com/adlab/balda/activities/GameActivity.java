@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -36,7 +38,10 @@ import com.adlab.balda.databinding.ActivityGameBinding;
 import com.adlab.balda.enums.FieldSizeType;
 import com.adlab.balda.enums.FieldType;
 import com.adlab.balda.enums.GameMessageType;
+import com.adlab.balda.model.move_search.Move;
 import com.adlab.balda.utils.PresenterManager;
+import com.adlab.balda.utils.UtilsKt;
+import com.adlab.balda.utils.ViewUtilsKt;
 import com.adlab.balda.widgets.BorderDecoration;
 import com.adlab.balda.adapters.FieldRecyclerAdapter;
 import com.adlab.balda.R;
@@ -50,6 +55,7 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventList
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 public class GameActivity extends AppCompatActivity
         implements GameContract.View, BaseFieldAdapter.OnFieldItemClickListener {
@@ -140,6 +146,20 @@ public class GameActivity extends AppCompatActivity
 
         binding.etInputFieldItem.addTextChangedListener(new SingleLetterTextWatcher());
 
+        binding.hintContainer.bHintHide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.hideHintClicked();
+            }
+        });
+
+        binding.hintContainer.bHintApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.applyHintClicked();
+            }
+        });
+
         PresenterManager.provideGamePresenter(this);
 
         mPresenter.start();
@@ -162,10 +182,13 @@ public class GameActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.used_words:
-                binding.drawerLayout.openDrawer(binding.navView);
+            case R.id.menu_used_words:
+                mPresenter.onShowUsedWordsClicked();
+                return true;
+            case R.id.menu_move_hint:
+                mPresenter.hintClicked();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -202,7 +225,6 @@ public class GameActivity extends AppCompatActivity
     public void showField(int rowCount, final int colCount, FieldType fieldType, FieldSizeType fieldSize) {
         adapter = makeAdapterByType(fieldType, fieldSize, colCount);
         ((BaseFieldAdapter)adapter).setOnItemClickListener(this);
-        adapter.setHasStableIds(true);
         layoutManager = new GridLayoutManager(this, colCount);
         if (fieldType == FieldType.HEXAGON) {
             layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -223,11 +245,46 @@ public class GameActivity extends AppCompatActivity
     }
 
     @Override
+    public void showUsedWords() {
+        binding.drawerLayout.openDrawer(binding.navView);
+    }
+
+    @Override
     public void showGameResult(int score) {
         binding.tvScore.setVisibility(View.GONE);
         binding.tvCongratulations.setVisibility(View.VISIBLE);
         binding.tvYouFilledField.setText(getString(R.string.filled_whole_field, score));
         binding.tvYouFilledField.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showHintBanner(String word) {
+        binding.hintContainer.tvHintText.setText(getString(R.string.hint_value, word.toUpperCase()));
+
+        binding.hintContainer.hintContainer.setVisibility(View.VISIBLE);
+        binding.getRoot().post(new Runnable() {
+            @Override
+            public void run() {
+                binding.activityGameRecyclerView.setPadding(
+                        ViewUtilsKt.dpToPx(GameActivity.this, 16),
+                        ViewUtilsKt.dpToPx(GameActivity.this, 16),
+                        ViewUtilsKt.dpToPx(GameActivity.this, 16),
+                        binding.hintContainer.hintContainer.getHeight()
+                                + ViewUtilsKt.dpToPx(GameActivity.this, 20)
+                );
+            }
+        });
+    }
+
+    @Override
+    public void hideHintBanner() {
+        binding.hintContainer.hintContainer.setVisibility(View.GONE);
+        binding.activityGameRecyclerView.setPadding(
+                ViewUtilsKt.dpToPx(this, 16),
+                ViewUtilsKt.dpToPx(this, 16),
+                ViewUtilsKt.dpToPx(this, 16),
+                ViewUtilsKt.dpToPx(this, 16)
+        );
     }
 
     @Override
@@ -251,8 +308,13 @@ public class GameActivity extends AppCompatActivity
     }
 
     @Override
-    public void updateCell(int cellNumber) {
-        adapter.notifyItemChanged(cellNumber);
+    public void updateCell(final int cellNumber) {
+        binding.getRoot().post(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyItemChanged(cellNumber);
+            }
+        });
     }
 
     @Override
@@ -263,7 +325,7 @@ public class GameActivity extends AppCompatActivity
 
     @Override
     public void scrollFieldToCell(final int cellNumber) {
-        new Handler().postDelayed(new Runnable() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 binding.scrollH.smoothScrollBy(calculateHorizontalOffset(cellNumber), 0);
@@ -348,12 +410,14 @@ public class GameActivity extends AppCompatActivity
 
     @Override
     public void deactivateActionMode() {
-        actionMode.finish();
+        if (actionMode != null)
+            actionMode.finish();
     }
 
     @Override
     public void updateActivatedLetterSequence(String letterSequence) {
-        actionMode.setTitle(letterSequence.toUpperCase());
+        if (actionMode != null)
+            actionMode.setTitle(letterSequence.toUpperCase());
     }
 
     @Override

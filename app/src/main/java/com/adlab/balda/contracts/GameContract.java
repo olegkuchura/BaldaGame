@@ -5,6 +5,7 @@ import com.adlab.balda.BaseView;
 import com.adlab.balda.enums.FieldSizeType;
 import com.adlab.balda.enums.FieldType;
 import com.adlab.balda.enums.GameMessageType;
+import com.adlab.balda.model.move_search.Move;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ public interface GameContract {
     interface View extends BaseView<Presenter> {
 
         void showField(int rowCount, int colCount, FieldType fieldType, FieldSizeType fieldSize);
+
+        void showUsedWords();
 
         void updateCell(int cellNumber);
 
@@ -40,6 +43,10 @@ public interface GameContract {
 
         void showGameResult(int score);
 
+        void showHintBanner(String word);
+
+        void hideHintBanner();
+
         void showGameExit();
 
     }
@@ -49,6 +56,8 @@ public interface GameContract {
         void setView(@NonNull View view);
 
         void resetView();
+
+        void onShowUsedWordsClicked();
 
         void onCellClicked(int cellNumber);
 
@@ -65,6 +74,12 @@ public interface GameContract {
         void deactivateActionMode();
 
         void confirmWord();
+
+        void hintClicked();
+
+        void hideHintClicked();
+
+        void applyHintClicked();
 
         void finishGame();
 

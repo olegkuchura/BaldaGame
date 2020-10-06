@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Балда</string>
+
+    // --- MAIN SCREEN ---
+    // Main screen buttons
+    <string name="start_one_man_game">Начать одиночную игру</string>
+    <string name="start_game_with_android">Начать игру с системой</string>
+    <string name="start_game_with_friends">Начать игру с друзьями</string>
+    <string name="settings">Настройки</string>
+
+    // --- GAME SETTINGS SCREEN ---
+    <string name="settings_for_one_man_game">Настройки одиночной игры</string>
+    <string name="settings_for_multiplayer_game">Настройки многопользовательской игры</string>
+    // Block titles
+    <string name="choose_field_size">Выберите размер поля</string>
+    <string name="enter_players">Введите имена игроков</string>
+    <string name="enter_init_word">Введите начальное слово</string>
+    <string name="choose_field_type">Выберите тип поля</string>
+
+    <string name="init_word">Начальное слово</string>
+    <string name="player_name">Имя игрока</string>
+    <string name="player_name_error">Только буквы, числа и подчеркивание</string>
+    <string name="player_name_count_limit_max">Только %d игроков разрешено</string>
+    <string name="player_name_count_limit_min">Добавьте как минимум %d игроков</string>
+    <string name="player_name_already_used">Это имя уже использовано</string>
+    <string name="start_game">Начать игру</string>
+    <string name="non_existent_word">Это несуществующее слово</string>
+    <string name="need_enter_word">Необходимо ввести слово</string>
+    <string name="non_appropriate_word_length">длина слова должна быть %d для этого поля</string>
+    <string name="square">Квадрат</string>
+    <string name="hexagon">Шестиугольник</string>
+    <string name="field_small">Маленькое</string>
+    <string name="field_medium">Среднее</string>
+    <string name="field_large">Большое</string>
+    <string name="field_extra_large">Очень большое</string>
+
+    // --- SPLASH SCREEN ---
+    <string name="database_creation">Создание базы данных</string>
+
+    // --- GAME SCREEN ---
+    <string name="your_score">Ваши баллы: %1$d</string>
+    <string name="score">%s: %d</string>
+    // Toolbar
+    <string name="one_man_game">Одиночная игра</string>
+    <string name="multiplayer_game">Многопользовательская игра</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="show_used_words">Показать использованные слова</string>
+    <string name="show_move_hint">Показать подсказку</string>
+    <string name="used_words">Использованные слова:</string>
+    // Tooltips
+    <string name="enter_new_letter">Вначале нужно добавить новую букву на поле</string>
+    <string name="no_such_word">Это слово отсутствует в словаре</string>
+    <string name="such_word_have_already_been_used">Это слово уже использовалось в этой игре</string>
+    <string name="must_contain_new_letter">Слово должно содержать новую букву</string>
+    <string name="invalid_symbol">Недействительный символ</string>
+    // Animation
+    <string name="plus_points"> +%1$d баллов</string>
+    // Hint
+    <string name="hint_value">Подсказка: %s</string>
+    <string name="hide">Скрыть</string>
+    <string name="apply">Применить</string>
+    // Game end dialog
+    <string name="congratulations">Поздравляем</string>
+    <string name="congratulations_nickname">%s выиграл(а): %d</string>
+    <string name="you_won">You won\n Your score: %1$d</string>
+    <string name="you_lost">You lost\n Your score: %1$d</string>
+    <string name="filled_whole_field">Вы заполнили все поле!\nВаши баллы: %1$d</string>
+    <string name="back_to_menu">Вернуться к меню</string>
+    <string name="start_new_game">Начать новую игру</string>
+    // Exit from game dialog
+    <string name="exit">Выйти</string>
+    <string name="exit_game_message">Вы хотите завершить эту игру?\nОна НЕ будет сохранена!</string>
+    <string name="finish">Да, завершить игру</string>
+    <!-- <string name="back_to_the_game">No, back to the game</string> -->
+    <string name="back_to_the_game">Нет, продолжить</string>
+
+
+    <string name="not_implemented">Извините, эта функция еще не реализована</string>
+</resources>

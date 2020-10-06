@@ -128,7 +128,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cv_score">
+                app:layout_constraintTop_toBottomOf="@id/cv_score">
 
                 <com.adlab.balda.widgets.BlockTouchEventLayout
                     android:id="@+id/touchEventLayout"
@@ -161,6 +161,17 @@
                 </com.adlab.balda.widgets.BlockTouchEventLayout>
 
             </androidx.cardview.widget.CardView>
+
+            <include
+                android:id="@+id/hint_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:visibility="gone"
+                layout="@layout/layout_hint_flex"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

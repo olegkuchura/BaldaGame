@@ -22,7 +22,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.ViewCompat.SCROLL_AXIS_VERTICAL
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
@@ -45,8 +44,6 @@ import com.adlab.balda.widgets.BorderDecoration
 import com.adlab.balda.widgets.BorderDecorationHexagon
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexboxLayoutManager
-import com.google.android.flexbox.JustifyContent
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 
@@ -131,12 +128,13 @@ class MultiplayerGameActivity: AppCompatActivity(),
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_game, menu)
+        menu?.findItem(R.id.menu_move_hint)?.isVisible = false
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.used_words -> {
+            R.id.menu_used_words -> {
                 mPresenter.onShowUsedWordsClicked()
                 true
             }
@@ -169,7 +167,6 @@ class MultiplayerGameActivity: AppCompatActivity(),
     override fun showField(rowCount: Int, colCount: Int, fieldType: FieldType, fieldSize: FieldSizeType) {
         adapter = makeAdapterByType(fieldType, fieldSize, colCount)
         (adapter as BaseFieldAdapter).setOnItemClickListener(this)
-        adapter!!.setHasStableIds(true)
         layoutManager = GridLayoutManager(this, colCount)
         if (fieldType === FieldType.HEXAGON) {
             layoutManager?.spanSizeLookup = object : SpanSizeLookup() {

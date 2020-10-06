@@ -9,5 +9,6 @@ interface CellView {
     fun showClearLetterButton()
     fun hideClearLetterButton()
     fun resetState()
+    fun moveSelect(number: Int)
 
 }

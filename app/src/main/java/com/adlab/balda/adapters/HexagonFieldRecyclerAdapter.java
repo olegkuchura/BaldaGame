@@ -3,7 +3,6 @@ package com.adlab.balda.adapters;
 
 import android.content.res.ColorStateList;
 import android.os.Build;
-import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ import com.adlab.balda.contracts.BaseGamePresenter;
 import com.adlab.balda.contracts.CellView;
 import com.adlab.balda.enums.FieldSizeType;
 import com.adlab.balda.utils.HexagonViewUtilsKt;
+import com.adlab.balda.widgets.HexagonCellView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -127,10 +127,12 @@ public class HexagonFieldRecyclerAdapter extends RecyclerView.Adapter<HexagonFie
         TextView textViewLetter;
         TextView textViewNumber;
         AppCompatImageView imageViewClearLetter;
+        HexagonCellView fieldCell;
 
         RecyclerViewHolder(View itemView) {
             super(itemView);
 
+            fieldCell = (HexagonCellView) itemView;
             textViewLetter = itemView.findViewById(R.id.field_item_text_view);
             textViewNumber = itemView.findViewById(R.id.tv_number);
             imageViewClearLetter = itemView.findViewById(R.id.iv_clear_letter);
@@ -211,7 +213,14 @@ public class HexagonFieldRecyclerAdapter extends RecyclerView.Adapter<HexagonFie
         public void resetState() {
             itemView.setSelected(false);
             itemView.setActivated(false);
+            fieldCell.setShowingMove(false);
             textViewNumber.setText(null);
+        }
+
+        @Override
+        public void moveSelect(int number) {
+            fieldCell.setShowingMove(true);
+            textViewNumber.setText(String.valueOf(number));
         }
     }
 }

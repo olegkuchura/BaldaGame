@@ -3,7 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/used_words"
+        android:id="@+id/menu_move_hint"
+        android:title="@string/show_move_hint"
+        android:icon="@drawable/ic_hint"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_used_words"
         android:title="@string/show_used_words"
         app:showAsAction="never" />
 

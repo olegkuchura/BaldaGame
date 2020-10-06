@@ -11,6 +11,8 @@ import com.adlab.balda.enums.FieldType
 import com.adlab.balda.enums.GameType
 import com.adlab.balda.model.GameLab
 import com.adlab.balda.model.GamePlayer
+import com.adlab.balda.model.move_search.MoveFinderManager
+import com.adlab.balda.utils.AppExecutors
 
 class GameSettingsPresenter(
         private val repository: WordsRepository,
@@ -51,6 +53,14 @@ class GameSettingsPresenter(
     override fun start() {}
 
     override fun start(gameType: GameType) {
+        if (!MoveFinderManager.inited) {
+            repository.getAllWords {
+                AppExecutors().diskIO().execute {
+                    MoveFinderManager.init(it)
+                }
+            }
+        }
+
         if (isFirstStart) {
             isFirstStart = false
             generateRandomWord()

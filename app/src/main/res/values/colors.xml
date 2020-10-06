@@ -10,6 +10,7 @@
     <color name="defaultItemBackgroundColor">@color/white</color>
     <color name="selectedItemBackgroundColor">@color/grayLight2</color>
     <color name="activatedItemBackgroundColor">@color/green1</color>
+    <color name="moveItemBackgroundColor">@color/yellow</color>
 
     <color name="letterNew">@color/grayDark2</color>
     <color name="letterOld">@color/green2</color>
@@ -20,6 +21,8 @@
 
     <color name="colorError">@color/red</color>
     <color name="disabledColor">@color/grayLight3</color>
+
+    <color name="yellow">#FFF8E1</color>
 
     <color name="red">#CF0000</color>
 

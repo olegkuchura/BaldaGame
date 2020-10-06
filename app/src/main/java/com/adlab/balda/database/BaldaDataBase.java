@@ -9,6 +9,8 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Oleg on 09.08.2018.
@@ -60,6 +62,22 @@ public class BaldaDataBase extends SQLiteOpenHelper {
         String word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD));
         cursor.close();
         return word;
+    }
+
+    public List<String> getAllWords() {
+        List<String> result = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(TABLE_WORDS, new String[]{COLUMN_WORD}, null, null,
+                null, null, null);
+
+        cursor.moveToFirst();
+        do {
+            String word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD));
+            result.add(word);
+        }while (cursor.moveToNext());
+
+        cursor.close();
+        return result;
     }
 
     @Override

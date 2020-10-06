@@ -1,32 +1,37 @@
 package com.adlab.balda.presenters
 
 import com.adlab.balda.contracts.CellView
-import com.adlab.balda.contracts.MultiplayerGameContract
-import com.adlab.balda.contracts.ScoreView
+import com.adlab.balda.contracts.GameContract
 import com.adlab.balda.enums.FieldSizeType
 import com.adlab.balda.enums.FieldType
 import com.adlab.balda.enums.GameMessageType
 import com.adlab.balda.model.GameLab
-import com.adlab.balda.model.MultiplePlayersGame
+import com.adlab.balda.model.OneManGame
+import com.adlab.balda.model.move_search.Move
+import com.adlab.balda.model.move_search.MoveFinderManager
 import com.adlab.balda.model.view_field.AbstractViewField
 import com.adlab.balda.model.view_field.ClassicViewField
 import com.adlab.balda.model.view_field.HexagonViewField
 import com.adlab.balda.utils.isCorrectChar
+import com.adlab.balda.utils.log
+import kotlinx.coroutines.*
 
-class MultiplayerGamePresenter(
-        private var mGameView: MultiplayerGameContract.View?
-): MultiplayerGameContract.Presenter {
+class GamePresenter(
+        private var mGameView: GameContract.View?
+): GameContract.Presenter {
 
-    private val game: MultiplePlayersGame = GameLab.getInstance().multiplayerGame
+    private val game: OneManGame = GameLab.getInstance().game
 
     private var field: AbstractViewField =
-            getViewFieldByType(game.fieldType, game.getCopyOfCells(), game.fieldSize)
+            getViewFieldByType(game.fieldType, game.copyOfCells, game.fieldSize)
+
+    private var hintMove: Move? = null
 
     init {
         mGameView?.setPresenter(this)
     }
 
-    override fun setView(view: MultiplayerGameContract.View) {
+    override fun setView(view: GameContract.View) {
         mGameView = view
         view.setPresenter(this)
     }
@@ -37,14 +42,13 @@ class MultiplayerGamePresenter(
 
     override fun onShowUsedWordsClicked() {
         mGameView?.showUsedWords()
-//        mGameView?.showGameResult("Artem", 68,
-//            listOf(Pair("Viktor", 13), Pair("Marina", 45), Pair("Oleg", 26)))
     }
+
 
     override fun start() {
         mGameView?.let { gameView ->
             gameView.showField(game.fieldSize.intValue(), game.fieldSize.intValue(), game.fieldType, game.fieldSize)
-            gameView.showScore(game.playersCount)
+            gameView.updateScore(game.player.score)
             gameView.updateUsedWords(game.usedWords)
             if (field.activeCellNumbers.isNotEmpty()) {
                 gameView.activateActionMode()
@@ -53,6 +57,7 @@ class MultiplayerGamePresenter(
             if (field.hasSelectedCell) {
                 gameView.updateCell(field.clearSelection())
             }
+            hintMove?.let { gameView.showHintBanner(it.word) }
         }
     }
 
@@ -74,6 +79,16 @@ class MultiplayerGamePresenter(
             val activeIndex = field.activeCellNumbers.indexOf(cellNumber)
             if (activeIndex != -1) {
                 cellView.activate(activeIndex + 1)
+            }
+        }
+
+        hintMove?.let { move ->
+            if (cellNumber == move.addedCharPos) {
+                cellView.showEnteredLetter(move.addedChar)
+            }
+            val movePos = move.wordCharsPos.indexOf(cellNumber)
+            if (movePos != -1) {
+                cellView.moveSelect(movePos + 1)
             }
         }
     }
@@ -135,7 +150,6 @@ class MultiplayerGamePresenter(
         if (!field.hasSelectedCell) {
             mGameView?.hideKeyboard()
         } else {
-            //todo do normal scroll to cell
             mGameView?.scrollFieldToCell(field.selectedCellNumber)
         }
     }
@@ -146,6 +160,8 @@ class MultiplayerGamePresenter(
 
     override fun enterLetter(letter: Char) {
         mGameView?.let { gameView ->
+            gameView.hideHintBanner()
+            hideHint()
             if (letter.isCorrectChar()) {
                 val oldEnteredCellNumber = field.enteredCellNumber
                 field.enteredLetter = letter
@@ -176,11 +192,11 @@ class MultiplayerGamePresenter(
 
     override fun confirmWord() {
         if (field.activeCellsContainEnteredLetter()) {
-            val oldScore = game.getPlayerScore(game.curPlayerIndex)
+            val oldScore: Int = game.player.score
             game.makeMove(field.enteredCellNumber, field.enteredLetter,
-                    field.activeCellNumbersArray, object : MultiplePlayersGame.MakeMoveCallback {
+                    field.activeCellNumbersArray, object : OneManGame.MakeMoveCallback {
                 override fun makeNextMove() {
-                    updateViewAfterSuccessfulMove(oldScore, game.getPlayerName(game.curPlayerIndex))
+                    updateViewAfterSuccessfulMove(oldScore)
                 }
 
                 override fun onWordIsNotExist() {
@@ -192,17 +208,8 @@ class MultiplayerGamePresenter(
                 }
 
                 override fun onGameFinished() {
-                    updateViewAfterSuccessfulMove(oldScore, game.getPlayerName(game.curPlayerIndex))
-                    val winnerIndex = game.winnerIndex
-                    val winnerNickname = game.getPlayerName(winnerIndex)
-                    val winnerScore = game.getPlayerScore(winnerIndex)
-                    val otherPlayers = mutableListOf<Pair<String, Int>>()
-                    for (i in 0 until game.playersCount) {
-                        if (i != winnerIndex) {
-                            otherPlayers.add(Pair(game.getPlayerName(i), game.getPlayerScore(i)))
-                        }
-                    }
-                    mGameView?.showGameResult(winnerNickname, winnerScore, otherPlayers)
+                    updateViewAfterSuccessfulMove(oldScore)
+                    mGameView?.showGameResult(game.player.score)
                 }
             })
         } else {
@@ -210,18 +217,48 @@ class MultiplayerGamePresenter(
         }
     }
 
+    override fun hintClicked() {
+        mGameView?.let { gameView ->
+            clearEnteredLetter()
+            hideHint()
+            if (!MoveFinderManager.inited) return
+            hintMove = MoveFinderManager.findRandomMove(game.field, game.usedWords)
+            gameView.showHintBanner(hintMove!!.word)
+            for (i in hintMove!!.wordCharsPos) {
+                gameView.updateCell(i)
+            }
+        }
+    }
+
+    override fun hideHintClicked() {
+        mGameView?.hideHintBanner()
+        hideHint()
+    }
+
+    override fun applyHintClicked() {
+        hintMove?.let { hintMove ->
+            field.enteredCellNumber = hintMove.addedCharPos
+            field.enteredLetter = hintMove.addedChar
+            hintMove.wordCharsPos.forEach {
+                field.activeCellNumbers.add(it)
+            }
+        }
+
+        hintMove = null
+
+        log(field.activeCellNumbersArray.toList().map { it.toString() }, ", ")
+        confirmWord()
+
+        mGameView?.hideHintBanner()
+    }
+
     override fun finishGame() {
         mGameView?.showGameExit()
     }
 
-    override fun bindScore(view: ScoreView, position: Int) {
-        view.showScore(game.getPlayerName(position), game.getPlayerScore(position),
-                game.curPlayerIndex == position)
-    }
-
-    private fun updateViewAfterSuccessfulMove(oldScore: Int, curPlayerNickname: String) {
+    private fun updateViewAfterSuccessfulMove(oldScore: Int) {
         mGameView?.let { gameView ->
-            field.items = game.getCopyOfCells()
+            field.items = game.copyOfCells
             field.clearEnteredLetter()
             val activeCellNumbers = field.activeCellNumbersArray
             field.activeCellNumbers.clear()
@@ -229,18 +266,27 @@ class MultiplayerGamePresenter(
                 gameView.updateCell(cellNumber)
             }
             gameView.deactivateActionMode()
-            gameView.updateScore()
-            //todo score animation
-            //gameView.showScoreAnimation(player!!.score - oldScore)
+            gameView.updateScore(game.player.score)
+            //mGameView.showScoreAnimation(player.getScore() - oldScore);
             gameView.updateUsedWords(game.usedWords)
         }
     }
 
-    private fun getViewFieldByType(fieldType: FieldType, items: CharArray, fieldSize: FieldSizeType): AbstractViewField {
+    private fun getViewFieldByType(fieldType: FieldType, items: CharArray, fieldSize: FieldSizeType)
+            : AbstractViewField {
         return if (fieldType === FieldType.SQUARE) {
             ClassicViewField(items, fieldSize)
         } else {
             HexagonViewField(items, fieldSize)
+        }
+    }
+
+    private fun hideHint() {
+        hintMove?.let { move ->
+           hintMove = null
+            move.wordCharsPos.forEach {
+                mGameView?.updateCell(it)
+            }
         }
     }
 

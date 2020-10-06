@@ -4,6 +4,8 @@ import com.adlab.balda.utils.AppExecutors;
 
 import androidx.annotation.NonNull;
 
+import java.util.List;
+
 public class WordsRepository implements WordsDataSource {
 
     private static WordsRepository INSTANCE;
@@ -60,6 +62,25 @@ public class WordsRepository implements WordsDataSource {
                         } else {
                             callback.onDataNotAvailable();
                         }
+                    }
+                });
+            }
+        };
+
+        mAppExecutors.diskIO().execute(runnable);
+    }
+
+    @Override
+    public void getAllWords(@NonNull final GetAllWordsCallback callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final List<String> words = mDatabase.getAllWords();
+
+                mAppExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onWordsLoaded(words);
                     }
                 });
             }

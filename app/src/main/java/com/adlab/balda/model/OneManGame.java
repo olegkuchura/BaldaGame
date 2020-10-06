@@ -113,6 +113,10 @@ public class OneManGame {
         return field.getFieldSize();
     }
 
+    public AbstractField getField() {
+        return field;
+    }
+
     public interface MakeMoveCallback {
         void makeNextMove();
         void onWordIsNotExist();
