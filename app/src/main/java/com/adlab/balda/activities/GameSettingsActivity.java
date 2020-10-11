@@ -20,17 +20,17 @@ import com.adlab.balda.enums.FieldSizeType;
 import com.adlab.balda.enums.FieldType;
 import com.adlab.balda.enums.GameType;
 import com.adlab.balda.utils.PresenterManager;
-import com.google.android.flexbox.AlignItems;
-import com.google.android.flexbox.FlexboxLayoutManager;
+import com.adlab.balda.utils.UtilsKt;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -108,19 +108,33 @@ public class GameSettingsActivity extends AppCompatActivity
             }
         });
 
+        KeyboardVisibilityEvent.setEventListener(this, new KeyboardVisibilityEventListener() {
+                    @Override
+                    public void onVisibilityChanged(boolean isOpen) {
+                        updateStartGameButtonState();
+                    }
+                });
+
         //todo remove context in params
         PresenterManager.provideGameSettingsPresenter(this, this);
 
         binding.rvPlayers.setAdapter(new PlayersAdapter(mPresenter));
 
+        binding.svGameSettingsRoot.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                updateStartGameButtonState();
+            }
+        });
+
         mPresenter.start(gameType);
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        mPresenter.start();
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateStartGameButtonState();
+    }
 
     @Override
     public void setPresenter(@NonNull GameSettingsContract.Presenter presenter) {
@@ -297,6 +311,17 @@ public class GameSettingsActivity extends AppCompatActivity
             case R.id.ib_add_player:
                 mPresenter.onAddPlayerClicked(Objects.requireNonNull(binding.etPlayerName.getText()).toString());
                 break;
+        }
+    }
+
+    private void updateStartGameButtonState() {
+        View view = binding.svGameSettingsRoot.getChildAt(binding.svGameSettingsRoot.getChildCount() - 1);
+        int diff = (view.getBottom() - (binding.svGameSettingsRoot.getHeight() + binding.svGameSettingsRoot.getScrollY()));
+
+        if (diff <= 0) {
+            binding.bStartGame.extend();
+        } else {
+            binding.bStartGame.shrink();
         }
     }
 

@@ -51,7 +51,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/b_hint_hide"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/MyTextButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
@@ -61,7 +61,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/b_hint_apply"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/MyTextButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"

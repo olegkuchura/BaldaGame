@@ -3,7 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/sv_game_settings_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingBottom="64dp"
             tools:context="com.adlab.balda.activities.GameSettingsActivity">
 
             <androidx.cardview.widget.CardView
@@ -44,7 +49,7 @@
                         android:layout_height="64dp"
                         android:layout_below="@id/tv_enter_init_word"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="4dp"
                         android:tint="@color/colorAccent"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:padding="8dp"
@@ -53,7 +58,8 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                        style="@style/MyEditTextStyle"
+                        android:theme="@style/MyEditTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_enter_init_word"
@@ -121,7 +127,7 @@
                         android:layout_height="64dp"
                         android:layout_below="@id/rv_players"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="4dp"
                         android:tint="@color/colorAccent"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:padding="8dp"
@@ -130,7 +136,8 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_player_name"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                        style="@style/MyEditTextStyle"
+                        android:theme="@style/MyEditTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/rv_players"
@@ -319,17 +326,31 @@
                 tools:text="length of word must be 4 for this field"
                 tools:visibility="visible"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/b_start_game"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/start_game" />
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/b_start_game"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="8dp"-->
+<!--                android:layout_marginTop="0dp"-->
+<!--                android:layout_marginEnd="8dp"-->
+<!--                android:text="@string/start_game" />-->
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/b_start_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_gravity="bottom|end"
+            android:contentDescription="@string/start_game"
+            android:text="@string/start_game"
+            android:textColor="@color/colorPrimaryDark"
+            app:iconTint="@color/colorPrimaryDark"
+            app:icon="@drawable/ic_confirm" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

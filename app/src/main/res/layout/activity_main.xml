@@ -45,7 +45,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/b_one_man_game"
-            style="@style/MainMenuButton"
+            style="@style/MyButtonStyle.MainMenuButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -53,7 +53,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/b_game_with_android"
-            style="@style/MainMenuButton"
+            style="@style/MyButtonStyle.MainMenuButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -61,7 +61,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/b_game_with_friends"
-            style="@style/MainMenuButton"
+            style="@style/MyButtonStyle.MainMenuButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -69,7 +69,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/b_settings"
-            style="@style/MainMenuButton"
+            style="@style/MyButtonStyle.MainMenuButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -77,6 +77,5 @@
     </LinearLayout>
 
 </ScrollView>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
