@@ -2,6 +2,7 @@ package com.adlab.balda.presenters
 
 import com.adlab.balda.DEFAULT_FIELD_SIZE
 import com.adlab.balda.DEFAULT_FIELD_TYPE
+import com.adlab.balda.TEST_MODE
 import com.adlab.balda.adapters.PlayersAdapter
 import com.adlab.balda.contracts.GameSettingsContract
 import com.adlab.balda.database.WordsDataSource.GetWordCallback
@@ -31,8 +32,8 @@ class GameSettingsPresenter(
     private var mCurrentWord: String = ""
     private var mIsCurrentWordExist = false
     private val mPlayers = ArrayList<GamePlayer>()
-//            .apply { add(GamePlayer("Rozmarin")); add(GamePlayer("Roman"))
-//                    add(GamePlayer("Marina")); add(GamePlayer("Jackson"))}
+            .apply { if (TEST_MODE) { add(GamePlayer("Rozmarin")); add(GamePlayer("Roman"))
+                    add(GamePlayer("Marina")); add(GamePlayer("Jackson")) }}
     private var mFieldSize = DEFAULT_FIELD_SIZE
     private var mFieldType = DEFAULT_FIELD_TYPE
     private val mWordLength: Int
@@ -71,6 +72,7 @@ class GameSettingsPresenter(
             GameType.SINGLE -> { viewState?.showPlayerNamesBlock(false) }
             GameType.MULTIPLAYER -> { viewState?.showPlayerNamesBlock(true) }
         }
+        viewState?.updatePlayers(mPlayers.size)
     }
 
     override fun initWordChanged(newWord: String) {

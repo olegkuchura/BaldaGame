@@ -182,6 +182,14 @@ public class GameSettingsActivity extends AppCompatActivity
     }
 
     @Override
+    public void updatePlayers(int playersCount) {
+        PlayersAdapter adapter = (PlayersAdapter) binding.rvPlayers.getAdapter();
+        if (adapter == null) return;
+        adapter.setPlayersCount(playersCount);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void playerAdded() {
         PlayersAdapter adapter = (PlayersAdapter) binding.rvPlayers.getAdapter();
         if (adapter == null) return;

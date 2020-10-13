@@ -27,6 +27,8 @@ public interface GameSettingsContract {
 
         void showPlayerNamesBlock(boolean show);
 
+        void updatePlayers(int playersCount);
+
         void playerAdded();
 
         void playerDeleted(int position);
