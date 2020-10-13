@@ -22,7 +22,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:context="com.adlab.balda.activities.GameActivity">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_input_field_item"
                 android:layout_width="1dp"
                 android:layout_height="wrap_content"
