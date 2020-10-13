@@ -44,6 +44,7 @@ import com.adlab.balda.widgets.BorderDecoration
 import com.adlab.balda.widgets.BorderDecorationHexagon
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import com.google.android.material.snackbar.Snackbar
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 
@@ -85,6 +86,7 @@ class MultiplayerGameActivity: AppCompatActivity(),
         dividerSizePx = dpToPxFloat(DIVIDER_SIZE.toFloat())
         textViewUsedWords = binding.navView.getHeaderView(0).findViewById(R.id.tv_used_words)
         (binding.rvScore.layoutManager as FlexboxLayoutManager).alignItems = AlignItems.CENTER
+        (binding.rvScore.layoutManager as FlexboxLayoutManager).justifyContent = JustifyContent.CENTER
         binding.clContentGame.setOnClickListener { hideKeyboard() }
         binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
             override fun onDrawerOpened(drawerView: View) { hideKeyboard() }
