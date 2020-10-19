@@ -1,5 +1,6 @@
 package com.adlab.balda.presenters
 
+import android.os.CountDownTimer
 import com.adlab.balda.contracts.CellView
 import com.adlab.balda.contracts.MultiplayerGameContract
 import com.adlab.balda.contracts.ScoreView
@@ -8,6 +9,7 @@ import com.adlab.balda.enums.FieldType
 import com.adlab.balda.enums.GameMessageType
 import com.adlab.balda.model.GameLab
 import com.adlab.balda.model.MultiplePlayersGame
+import com.adlab.balda.model.Timer
 import com.adlab.balda.model.view_field.AbstractViewField
 import com.adlab.balda.model.view_field.ClassicViewField
 import com.adlab.balda.model.view_field.HexagonViewField
@@ -19,8 +21,13 @@ class MultiplayerGamePresenter(
 
     private val game: MultiplePlayersGame = GameLab.getInstance().multiplayerGame
 
-    private var field: AbstractViewField =
+    private val field: AbstractViewField =
             getViewFieldByType(game.fieldType, game.getCopyOfCells(), game.fieldSize)
+
+    private val timer = Timer(totalValue = (1000 * 60 * 3) + 500)
+    private var countdownTimer: CountDownTimer? = null
+
+    private var isMoveChecking = false
 
     init {
         mGameView?.setPresenter(this)
@@ -35,10 +42,17 @@ class MultiplayerGamePresenter(
         mGameView = null
     }
 
+    override fun onScreenShown() {
+        if (timer.isRun) startCountdownTimer()
+    }
+
+    override fun onScreenHidden() {
+        countdownTimer?.cancel()
+        countdownTimer = null
+    }
+
     override fun onShowUsedWordsClicked() {
         mGameView?.showUsedWords()
-//        mGameView?.showGameResult("Artem", 68,
-//            listOf(Pair("Viktor", 13), Pair("Marina", 45), Pair("Oleg", 26)))
     }
 
     override fun start() {
@@ -53,10 +67,18 @@ class MultiplayerGamePresenter(
             if (field.hasSelectedCell) {
                 gameView.updateCell(field.clearSelection())
             }
+            gameView.updateTimer(timer.currentValue, true)
+            if (game.isFinished) showWinner()
         }
     }
 
     override fun bindCell(cellView: CellView, cellNumber: Int) {
+        if (!timer.isRun && !game.isFinished) {
+            cellView.showLetter(' ')
+            cellView.hideClearLetterButton()
+            cellView.resetState()
+            return
+        }
         if (cellNumber == field.enteredCellNumber) {
             cellView.showEnteredLetter(field.enteredLetter)
         } else {
@@ -126,6 +148,7 @@ class MultiplayerGamePresenter(
                 gameView.deactivateActionMode()
             } else if (field.activeCellNumbers.isNotEmpty() && !wasActiveModeActivated) {
                 gameView.activateActionMode()
+                gameView.updateTimer(timer.currentValue)
                 gameView.updateActivatedLetterSequence(field.enteredLetterSequence)
             }
         }
@@ -166,43 +189,45 @@ class MultiplayerGamePresenter(
 
     override fun deactivateActionMode() {
         mGameView?.let { gameView ->
-            while (field.activeCellNumbers.size != 0) {
-                val removedCellNumber = field.activeCellNumbers.removeLast()
-                gameView.updateCell(removedCellNumber)
-            }
+            clearActiveNumbersAndUpdate()
             gameView.updateCell(field.enteredCellNumber)
         }
     }
 
     override fun confirmWord() {
         if (field.activeCellsContainEnteredLetter()) {
-            val oldScore = game.getPlayerScore(game.curPlayerIndex)
+            isMoveChecking = true
+            val word = field.enteredLetterSequence
             game.makeMove(field.enteredCellNumber, field.enteredLetter,
                     field.activeCellNumbersArray, object : MultiplePlayersGame.MakeMoveCallback {
-                override fun makeNextMove() {
-                    updateViewAfterSuccessfulMove(oldScore, game.getPlayerName(game.curPlayerIndex))
+                override fun onMoveAccepted() {
+                    isMoveChecking = false
+                    updateViewAfterSuccessfulMove(word)
+                    countdownTimer?.cancel()
+                    countdownTimer = null
+                    timer.reset()
+                    startCountdownTimer()
                 }
 
                 override fun onWordIsNotExist() {
+                    isMoveChecking = false
                     mGameView?.showMessage(GameMessageType.NO_SUCH_WORD)
+                    if (countdownTimer == null) onTimerOver()
                 }
 
                 override fun onWordIsAlreadyUsed() {
+                    isMoveChecking = false
                     mGameView?.showMessage(GameMessageType.WORD_ALREADY_USED)
+                    if (countdownTimer == null) onTimerOver()
                 }
 
                 override fun onGameFinished() {
-                    updateViewAfterSuccessfulMove(oldScore, game.getPlayerName(game.curPlayerIndex))
-                    val winnerIndex = game.winnerIndex
-                    val winnerNickname = game.getPlayerName(winnerIndex)
-                    val winnerScore = game.getPlayerScore(winnerIndex)
-                    val otherPlayers = mutableListOf<Pair<String, Int>>()
-                    for (i in 0 until game.playersCount) {
-                        if (i != winnerIndex) {
-                            otherPlayers.add(Pair(game.getPlayerName(i), game.getPlayerScore(i)))
-                        }
-                    }
-                    mGameView?.showGameResult(winnerNickname, winnerScore, otherPlayers)
+                    isMoveChecking = false
+                    updateViewAfterSuccessfulMove(word)
+                    countdownTimer?.cancel()
+                    countdownTimer = null
+                    timer.isRun = false
+                    showWinner()
                 }
             })
         } else {
@@ -210,30 +235,104 @@ class MultiplayerGamePresenter(
         }
     }
 
-    override fun finishGame() {
+    override fun exitGame() {
         mGameView?.showGameExit()
+    }
+
+    override fun finishGame() {
+        countdownTimer?.cancel()
+        countdownTimer = null
+        timer.isRun = false
+        game.fillInEntireField()
+        for (index in field.items.indices) {
+            if (field.items[index] == ' ') field.items[index] = 'А'
+        }
+        mGameView?.updateField()
+        showWinner()
     }
 
     override fun bindScore(view: ScoreView, position: Int) {
         view.showScore(game.getPlayerName(position), game.getPlayerScore(position),
                 game.curPlayerIndex == position)
     }
+    override fun pauseGameClicked() {
+        if (!timer.isRun) return
+        countdownTimer?.cancel()
+        countdownTimer = null
+        timer.isRun = false
+        mGameView?.let { gameView ->
+            if(field.hasSelectedCell) gameView.hideKeyboard()
+            gameView.updateField()
+            gameView.updateTimer(timer.currentValue, true)
+            gameView.showPause()
+        }
+    }
 
-    private fun updateViewAfterSuccessfulMove(oldScore: Int, curPlayerNickname: String) {
+    override fun resumeGameClicked() {
+        startCountdownTimer()
+        mGameView?.updateField()
+    }
+
+    private fun startCountdownTimer() {
+        if (countdownTimer != null) { return }
+        countdownTimer = RoundCountDownTimer(timer.currentValue, 500).start()
+        timer.isRun = true
+    }
+
+    private fun onTimerOver() {
+        if (!isMoveChecking) {
+            game.goToNextPlayer()
+            timer.reset()
+            startCountdownTimer()
+            mGameView?.let { gameView ->
+                gameView.updateCell(field.clearEnteredLetter())
+                gameView.updateCell(field.clearSelection())
+                gameView.hideKeyboard()
+                clearActiveNumbersAndUpdate()
+                gameView.deactivateActionMode()
+                gameView.updatePlayersAndScore()
+                gameView.hideUsedWords()
+                gameView.showMessage(GameMessageType.TIME_OVER)
+            }
+        } else {
+            timer.currentValue = 0
+            mGameView?.updateTimer(timer.currentValue , true)
+        }
+    }
+
+    private fun  clearActiveNumbersAndUpdate() {
+        mGameView?.let { gameView ->
+            val activeCells = field.activeCellNumbersArray
+            field.activeCellNumbers.clear()
+            activeCells.forEach { gameView.updateCell(it) }
+        }
+    }
+
+    private fun updateViewAfterSuccessfulMove(enteredWord: String) {
         mGameView?.let { gameView ->
             field.items = game.getCopyOfCells()
             field.clearEnteredLetter()
-            val activeCellNumbers = field.activeCellNumbersArray
-            field.activeCellNumbers.clear()
-            for (cellNumber in activeCellNumbers) {
-                gameView.updateCell(cellNumber)
-            }
+            clearActiveNumbersAndUpdate()
             gameView.deactivateActionMode()
-            gameView.updateScore()
+            gameView.updatePlayersAndScore()
             //todo score animation
-            //gameView.showScoreAnimation(player!!.score - oldScore)
+            //gameView.showScoreAnimation(player!!.score -p oldScore)
+            gameView.showSuccessfulMoveMessage(enteredWord)
             gameView.updateUsedWords(game.usedWords)
         }
+    }
+
+    private fun showWinner() {
+        val winnerIndex = game.winnerIndex
+        val winnerNickname = game.getPlayerName(winnerIndex)
+        val winnerScore = game.getPlayerScore(winnerIndex)
+        val otherPlayers = mutableListOf<Pair<String, Int>>()
+        for (i in 0 until game.playersCount) {
+            if (i != winnerIndex) {
+                otherPlayers.add(Pair(game.getPlayerName(i), game.getPlayerScore(i)))
+            }
+        }
+        mGameView?.showGameResult(winnerNickname, winnerScore, otherPlayers)
     }
 
     private fun getViewFieldByType(fieldType: FieldType, items: CharArray, fieldSize: FieldSizeType): AbstractViewField {
@@ -241,6 +340,18 @@ class MultiplayerGamePresenter(
             ClassicViewField(items, fieldSize)
         } else {
             HexagonViewField(items, fieldSize)
+        }
+    }
+
+
+    private inner class RoundCountDownTimer(startValue: Long, interval: Long): CountDownTimer(startValue, interval) {
+        override fun onTick(time: Long) {
+            timer.currentValue = time
+            mGameView?.updateTimer(timer.currentValue)
+        }
+        override fun onFinish() {
+            countdownTimer = null
+            onTimerOver()
         }
     }
 

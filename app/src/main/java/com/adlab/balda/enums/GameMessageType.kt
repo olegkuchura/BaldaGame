@@ -5,5 +5,6 @@ enum class GameMessageType {
     NEED_ENTER_LETTER,
     MUST_CONTAIN_NEW_LETTER,
     NO_SUCH_WORD,
-    WORD_ALREADY_USED
+    WORD_ALREADY_USED,
+    TIME_OVER
 }

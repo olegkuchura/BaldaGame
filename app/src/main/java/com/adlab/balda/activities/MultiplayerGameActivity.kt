@@ -2,22 +2,23 @@ package com.adlab.balda.activities
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Menu
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewCompat.SCROLL_AXIS_VERTICAL
 import androidx.databinding.DataBindingUtil
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.adlab.balda.R
+import com.adlab.balda.TEST_MODE
 import com.adlab.balda.adapters.BaseFieldAdapter
 import com.adlab.balda.adapters.BaseFieldAdapter.OnFieldItemClickListener
 import com.adlab.balda.adapters.FieldRecyclerAdapter
@@ -34,11 +36,11 @@ import com.adlab.balda.adapters.HexagonFieldRecyclerAdapter
 import com.adlab.balda.adapters.ScoreAdapter
 import com.adlab.balda.contracts.MultiplayerGameContract
 import com.adlab.balda.databinding.ActivityMultiplayerGameBinding
+import com.adlab.balda.dialogs.PauseDialog
 import com.adlab.balda.enums.FieldSizeType
 import com.adlab.balda.enums.FieldType
 import com.adlab.balda.enums.GameMessageType
-import com.adlab.balda.utils.PresenterManager
-import com.adlab.balda.utils.dpToPxFloat
+import com.adlab.balda.utils.*
 import com.adlab.balda.widgets.BlockTouchEventLayout.TouchListener
 import com.adlab.balda.widgets.BorderDecoration
 import com.adlab.balda.widgets.BorderDecorationHexagon
@@ -49,7 +51,7 @@ import com.google.android.material.snackbar.Snackbar
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 
 class MultiplayerGameActivity: AppCompatActivity(),
-        MultiplayerGameContract.View, OnFieldItemClickListener {
+        MultiplayerGameContract.View, OnFieldItemClickListener, PauseDialog.CallbackListener {
     companion object {
         private const val ITEM_SIZE = 64
         private const val TEXT_SIZE = 46
@@ -75,6 +77,9 @@ class MultiplayerGameActivity: AppCompatActivity(),
     private var layoutManager: GridLayoutManager? = null
 
     private var actionMode: ActionMode? = null
+    private var imageViewTimerIcon: ImageView? = null
+    private var textViewTimerValue: TextView? = null
+    private var textViewActivatedWord: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,11 +97,8 @@ class MultiplayerGameActivity: AppCompatActivity(),
             override fun onDrawerOpened(drawerView: View) { hideKeyboard() }
         })
         KeyboardVisibilityEvent.setEventListener(this) { isOpen ->
-            if (isOpen) {
-                mPresenter.onKeyboardOpen()
-            } else {
-                mPresenter.onKeyboardHidden()
-            }
+            if (isOpen) { mPresenter.onKeyboardOpen() }
+            else { mPresenter.onKeyboardHidden() }
         }
         binding.touchEventLayout.setTouchListener(object : TouchListener {
             private var mPosX = 0f
@@ -115,8 +117,20 @@ class MultiplayerGameActivity: AppCompatActivity(),
         })
         binding.etInputFieldItem.addTextChangedListener(SingleLetterTextWatcher())
 
+        binding.timerContainer.setOnClickListener { mPresenter.pauseGameClicked() }
+
         PresenterManager.provideMultiplayerGamePresenter(this)
         mPresenter.start()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mPresenter.onScreenShown()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mPresenter.onScreenHidden()
     }
 
     override fun onDestroy() {
@@ -129,15 +143,16 @@ class MultiplayerGameActivity: AppCompatActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_game, menu)
-        menu?.findItem(R.id.menu_move_hint)?.isVisible = false
+        menuInflater.inflate(R.menu.menu_multiplayer_game, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_used_words -> {
-                mPresenter.onShowUsedWordsClicked()
+            R.id.menu_used_words -> { mPresenter.onShowUsedWordsClicked(); true }
+            R.id.menu_pause -> {
+                if (TEST_MODE) mPresenter.finishGame()
+                else mPresenter.pauseGameClicked()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -162,7 +177,7 @@ class MultiplayerGameActivity: AppCompatActivity(),
         if (binding.drawerLayout.isDrawerOpen(binding.navView)) {
             binding.drawerLayout.closeDrawer(binding.navView)
         } else {
-            mPresenter.finishGame()
+            mPresenter.exitGame()
         }
     }
 
@@ -191,8 +206,13 @@ class MultiplayerGameActivity: AppCompatActivity(),
         binding.drawerLayout.openDrawer(binding.navView)
     }
 
+    override fun hideUsedWords() {
+        binding.drawerLayout.closeDrawer(binding.navView)
+    }
+
     override fun showGameResult(winnerNickname: String, winnerScore: Int, otherPlayers: List<Pair<String, Int>>) {
         binding.rvScore.visibility = View.GONE
+        binding.timerContainer.visibility = View.GONE
 
         binding.tvWinner.text = getString(R.string.congratulations_nickname, winnerNickname, winnerScore)
         binding.tvOtherPlayers.text = StringBuilder().apply {
@@ -223,6 +243,10 @@ class MultiplayerGameActivity: AppCompatActivity(),
         adapter!!.notifyItemChanged(cellNumber)
     }
 
+    override fun updateField() {
+        adapter!!.notifyDataSetChanged()
+    }
+
     override fun showKeyboard() {
         binding.etInputFieldItem.requestFocus()
         imm.showSoftInput(binding.etInputFieldItem, InputMethodManager.SHOW_FORCED)
@@ -231,8 +255,7 @@ class MultiplayerGameActivity: AppCompatActivity(),
     override fun scrollFieldToCell(cellNumber: Int) {
         binding.activityGameRecyclerView.postDelayed({
             if (!binding.activityGameRecyclerView.hasNestedScrollingParent(ViewCompat.TYPE_NON_TOUCH)) {
-                binding.activityGameRecyclerView.
-                    startNestedScroll(SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_NON_TOUCH)
+                binding.activityGameRecyclerView.startNestedScroll(SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_NON_TOUCH)
             }
             binding.scrollH.smoothScrollBy(calculateHorizontalOffset(cellNumber), 0)
             binding.activityGameRecyclerView.smoothScrollBy(0, calculateVerticalOffset(cellNumber))
@@ -305,10 +328,35 @@ class MultiplayerGameActivity: AppCompatActivity(),
 
     override fun activateActionMode() {
         actionMode = startSupportActionMode(ActionModeCallback())
+
+        val timerView = LayoutInflater.from(this).inflate(R.layout.layout_timer, null)
+        textViewActivatedWord = TextView(this).apply {
+            textSize = 20f
+            setTextColor(this@MultiplayerGameActivity.color(R.color.white))
+            setTypeface(this.typeface, Typeface.BOLD)
+        }
+        val linearLayout = LinearLayout(this).apply {
+            gravity = Gravity.CENTER_VERTICAL
+            addView(timerView)
+            addView(textViewActivatedWord)
+        }
+
+        val lp = textViewActivatedWord!!.layoutParams as LinearLayout.LayoutParams
+        lp.setMargins(this@MultiplayerGameActivity.dpToPx(8F), 0, 0, 0)
+        textViewActivatedWord!!.layoutParams = lp
+        actionMode?.customView = linearLayout
+        with(actionMode?.customView as LinearLayout) {
+            imageViewTimerIcon = this.findViewById(R.id.iv_countdown_icon)
+            textViewTimerValue = this.findViewById(R.id.tv_countdown_timer)
+        }
+        timerView.setOnClickListener { mPresenter.pauseGameClicked() }
     }
 
     override fun deactivateActionMode() {
-        actionMode!!.finish()
+        actionMode?.finish()
+        imageViewTimerIcon = null
+        textViewTimerValue = null
+        textViewActivatedWord = null
     }
 
     override fun showScore(playersCount: Int) {
@@ -316,10 +364,13 @@ class MultiplayerGameActivity: AppCompatActivity(),
     }
 
     override fun updateActivatedLetterSequence(letterSequence: String) {
-        actionMode!!.title = letterSequence.toUpperCase()
+        with(letterSequence.toUpperCase()) {
+            actionMode?.title = this
+            textViewActivatedWord?.text = this
+        }
     }
 
-    override fun updateScore() {
+    override fun updatePlayersAndScore() {
         // todo make better (DiffUtil for example)
         binding.rvScore.adapter?.notifyDataSetChanged()
     }
@@ -331,7 +382,12 @@ class MultiplayerGameActivity: AppCompatActivity(),
             GameMessageType.MUST_CONTAIN_NEW_LETTER -> showSnackbar(R.string.must_contain_new_letter)
             GameMessageType.NO_SUCH_WORD -> showSnackbar(R.string.no_such_word)
             GameMessageType.WORD_ALREADY_USED -> showSnackbar(R.string.such_word_have_already_been_used)
+            GameMessageType.TIME_OVER -> showSnackbar(R.string.time_over)
         }
+    }
+
+    override fun showSuccessfulMoveMessage(word: String) {
+        showSnackbar(R.string.successful_move, word.toUpperCase(), word.length)
     }
 
     private fun showSnackbar(@StringRes resId: Int, vararg values: Any) {
@@ -354,6 +410,48 @@ class MultiplayerGameActivity: AppCompatActivity(),
                 FieldType.SQUARE -> BorderDecoration(this, DIVIDER_SIZE.toFloat(), colCount)
                 FieldType.HEXAGON -> BorderDecorationHexagon(this, DIVIDER_SIZE.toFloat(), colCount)
             }
+
+    override fun updateTimer(time: Long, visibleAnyway: Boolean) {
+        val minute = (time / 1000) / 60
+        val seconds = (time / 1000) % 60
+        val secString = if (seconds < 10) "0$seconds" else "$seconds"
+
+        binding.timerLayout.tvCountdownTimer.text = "$minute:$secString"
+        textViewTimerValue?.text = "$minute:$secString"
+
+        val color = when(time < 11 * 1000) {
+            true -> ContextCompat.getColor(this, R.color.redLight)
+            false -> ContextCompat.getColor(this, R.color.white)
+        }
+        binding.timerLayout.ivCountdownIcon.setColorFilter(color)
+        binding.timerLayout.tvCountdownTimer.setTextColor(color)
+
+        imageViewTimerIcon?.setColorFilter(color)
+        textViewTimerValue?.setTextColor(color)
+
+        if (time < 11 * 1000 && !visibleAnyway) {
+            val alpha = when (binding.timerLayout.llTimerContainer.alpha) {
+                0F -> 1F
+                1F -> 0F
+                else -> 1F
+            }
+            binding.timerLayout.llTimerContainer.alpha = alpha
+            imageViewTimerIcon?.alpha = alpha
+            textViewTimerValue?.alpha = alpha
+        } else {
+            binding.timerLayout.llTimerContainer.alpha = 1F
+            imageViewTimerIcon?.alpha = 1F
+            textViewTimerValue?.alpha = 1F
+        }
+    }
+
+    override fun showPause() {
+        PauseDialog().show(supportFragmentManager, "PauseDialog")
+    }
+
+    override fun onResumeClicked() {
+        mPresenter.resumeGameClicked()
+    }
 
     private inner class SingleLetterTextWatcher : TextWatcher {
         override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}

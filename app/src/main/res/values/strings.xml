@@ -40,19 +40,24 @@
     // --- GAME SCREEN ---
     <string name="your_score">Your score: %1$d</string>
     <string name="score">%s: %d</string>
+    <string name="used_words">Used words:</string>
+    <string name="game_paused">The game is paused</string>
+    <string name="resume_game">Resume game</string>
     // Toolbar
     <string name="one_man_game">One-man game</string>
     <string name="multiplayer_game">Multiplayer game</string>
     <string name="confirm">Confirm</string>
     <string name="show_used_words">Show used words</string>
     <string name="show_move_hint">Show move hint</string>
-    <string name="used_words">Used words:</string>
+    <string name="pause_game">Pause</string>
     // Tooltips
     <string name="enter_new_letter">First you need to add a new letter on field</string>
     <string name="no_such_word">There is no such word in the dictionary</string>
     <string name="such_word_have_already_been_used">Such word have already been used in this game</string>
     <string name="must_contain_new_letter">The word must contain a new letter</string>
     <string name="invalid_symbol">It is invalid symbol</string>
+    <string name="successful_move">The word "%s" is accepted, +%d points</string>
+    <string name="time_over">Time has run out</string>
     // Animation
     <string name="plus_points"> +%1$d points</string>
     // Hint

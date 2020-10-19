@@ -1,13 +1,7 @@
 package com.adlab.balda.model
 
 import com.adlab.balda.database.WordsDataSource
-import com.adlab.balda.database.WordsDataSource.CheckWordCallback
-import com.adlab.balda.enums.FieldSizeType
-import com.adlab.balda.enums.FieldType
 import com.adlab.balda.model.field.AbstractField
-import com.adlab.balda.model.field.ClassicField
-import com.adlab.balda.model.field.HexagonField
-import java.util.*
 import kotlin.collections.ArrayList
 
 class MultiplePlayersGame(
@@ -29,6 +23,9 @@ class MultiplePlayersGame(
 
     val winnerIndex
         get() = players.indexOf(players.maxBy { it.score })
+
+    val isFinished
+        get() = field.isFieldFull
 
     fun getPlayerName(index: Int) = players[index].nickname
 
@@ -69,11 +66,22 @@ class MultiplePlayersGame(
                 if (isGameFinished) {
                     callback.onGameFinished()
                 } else {
-                    callback.makeNextMove()
+                    callback.onMoveAccepted()
                 }
             } else {
                 callback.onWordIsNotExist()
             }
+        }
+    }
+
+    fun goToNextPlayer() {
+        moveIndexToNextPlayer()
+    }
+
+    fun fillInEntireField() {
+        for(index in field.items.indices) {
+            if (field.items[index] == ' ')
+                field.items[index] = 'А'
         }
     }
 
@@ -82,7 +90,7 @@ class MultiplePlayersGame(
         players[curPlayerIndex].addEnteredWord(enteredWord)
         moveIndexToNextPlayer()
         field.setLetter(enteredCellNumber, enteredLetter)
-        return isGameFinish()
+        return field.isFieldFull
     }
 
     private fun moveIndexToNextPlayer() {
@@ -91,11 +99,9 @@ class MultiplePlayersGame(
         else curPlayerIndex++
     }
 
-    private fun isGameFinish() = field.isFieldFull
-
 
     interface MakeMoveCallback {
-        fun makeNextMove()
+        fun onMoveAccepted()
         fun onWordIsNotExist()
         fun onWordIsAlreadyUsed()
         fun onGameFinished()

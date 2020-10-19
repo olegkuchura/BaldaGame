@@ -41,19 +41,25 @@
     // --- GAME SCREEN ---
     <string name="your_score">Ваши баллы: %1$d</string>
     <string name="score">%s: %d</string>
+    <string name="used_words">Использованные слова:</string>
+    <string name="game_paused">Игра приостановлена</string>
+    <string name="resume_game">Продолжить игру</string>
     // Toolbar
     <string name="one_man_game">Одиночная игра</string>
     <string name="multiplayer_game">Многопользовательская игра</string>
     <string name="confirm">Подтвердить</string>
     <string name="show_used_words">Показать использованные слова</string>
     <string name="show_move_hint">Показать подсказку</string>
-    <string name="used_words">Использованные слова:</string>
+    <string name="pause_game">Поставить на паузу</string>
+
     // Tooltips
     <string name="enter_new_letter">Вначале нужно добавить новую букву на поле</string>
     <string name="no_such_word">Это слово отсутствует в словаре</string>
     <string name="such_word_have_already_been_used">Это слово уже использовалось в этой игре</string>
     <string name="must_contain_new_letter">Слово должно содержать новую букву</string>
     <string name="invalid_symbol">Недействительный символ</string>
+    <string name="successful_move">Слово \"%s\" засчитано, +%d балла</string>
+    <string name="time_over">Время хода вышло</string>
     // Animation
     <string name="plus_points"> +%1$d баллов</string>
     // Hint

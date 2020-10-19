@@ -14,7 +14,11 @@ interface MultiplayerGameContract {
 
         fun showUsedWords()
 
+        fun hideUsedWords()
+
         fun updateCell(cellNumber: Int)
+
+        fun updateField()
 
         fun showKeyboard()
 
@@ -30,9 +34,11 @@ interface MultiplayerGameContract {
 
         fun showScore(playersCount: Int)
 
-        fun updateScore()
+        fun updatePlayersAndScore()
 
         fun showMessage(message: GameMessageType)
+
+        fun showSuccessfulMoveMessage(word: String)
 
         fun showScoreAnimation(deltaScore: Int)
 
@@ -41,6 +47,10 @@ interface MultiplayerGameContract {
         fun showGameResult(winnerNickname: String, winnerScore: Int, otherPlayers: List<Pair<String, Int>>)
 
         fun showGameExit()
+
+        fun updateTimer(time: Long, visibleAnyway: Boolean = false)
+
+        fun showPause()
     }
 
     interface Presenter: BasePresenter, BaseGamePresenter {
@@ -48,6 +58,10 @@ interface MultiplayerGameContract {
         fun setView(view: View)
 
         fun resetView()
+
+        fun onScreenShown()
+
+        fun onScreenHidden()
 
         fun onShowUsedWordsClicked()
 
@@ -67,9 +81,15 @@ interface MultiplayerGameContract {
 
         fun confirmWord()
 
+        fun exitGame()
+
         fun finishGame()
 
         fun bindScore(view: ScoreView, position: Int)
+
+        fun pauseGameClicked()
+
+        fun resumeGameClicked()
     }
 
 }

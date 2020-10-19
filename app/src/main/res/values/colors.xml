@@ -25,7 +25,7 @@
     <color name="yellow">#FFF8E1</color>
 
     <color name="red">#CF0000</color>
-    <color name="redLight">#EF9A9A</color>
+    <color name="redLight">#EF5350</color>
 
     <color name="green1">#E0F2F1</color>
     <color name="green2">#B2DFDB</color>
@@ -38,5 +38,7 @@
     <color name="grayDark1">#757575</color>
     <color name="grayDark2">#424242</color>
     <color name="black">#000000</color>
+
+    <color name="black75">#BF000000</color>
 
 </resources>
