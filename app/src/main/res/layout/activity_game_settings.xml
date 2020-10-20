@@ -117,6 +117,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginStart="0dp"
                         android:orientation="horizontal"
+                        android:overScrollMode="ifContentScrolls"
                         app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
                         tools:itemCount="3"
                         tools:listitem="@layout/item_player" />
@@ -181,8 +182,8 @@
                         android:paddingTop="16dp"
                         android:paddingBottom="16dp"
                         android:rotation="180"
-                        android:tint="@color/enabled_color_selector"
                         android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@color/enabled_color_selector"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_field_size_value"
                         app:layout_constraintEnd_toStartOf="@+id/tv_field_size_value"
                         app:layout_constraintHorizontal_bias="1.0"
@@ -196,8 +197,8 @@
                         android:layout_height="60dp"
                         android:paddingTop="16dp"
                         android:paddingBottom="16dp"
-                        android:tint="@color/enabled_color_selector"
                         android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@color/enabled_color_selector"
                         app:layout_constraintBottom_toBottomOf="@+id/tv_field_size_value"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -326,15 +327,6 @@
                 tools:text="length of word must be 4 for this field"
                 tools:visibility="visible"/>
 
-<!--            <com.google.android.material.button.MaterialButton-->
-<!--                android:id="@+id/b_start_game"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="8dp"-->
-<!--                android:layout_marginTop="0dp"-->
-<!--                android:layout_marginEnd="8dp"-->
-<!--                android:text="@string/start_game" />-->
-
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
@@ -347,8 +339,6 @@
             android:layout_gravity="bottom|end"
             android:contentDescription="@string/start_game"
             android:text="@string/start_game"
-            android:textColor="@color/colorPrimaryDark"
-            app:iconTint="@color/colorPrimaryDark"
             app:icon="@drawable/ic_confirm" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -131,12 +131,6 @@ public class GameSettingsActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        updateStartGameButtonState();
-    }
-
-    @Override
     public void setPresenter(@NonNull GameSettingsContract.Presenter presenter) {
         mPresenter = presenter;
     }
