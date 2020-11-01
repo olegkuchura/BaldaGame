@@ -1,81 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/backgroundScreen">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent"
+        android:background="@color/backgroundScreen">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            app:title="Balda game"
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:context="com.adlab.balda.activities.MainActivity">
-
-        <!-- <ImageView
-            android:id="@+id/iv_balda_activity_main"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/description_title"
-            android:src="@drawable/balda_image" /> -->
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/b_one_man_game"
-            style="@style/MyButtonStyle.MainMenuButton"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:title="Balda game" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/start_one_man_game" />
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/b_game_with_android"
-            style="@style/MyButtonStyle.MainMenuButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/start_game_with_android" />
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/b_game_with_friends"
-            style="@style/MyButtonStyle.MainMenuButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/start_game_with_friends" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    tools:context="com.adlab.balda.activities.MainActivity">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/b_settings"
-            style="@style/MyButtonStyle.MainMenuButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/settings" />
-    </LinearLayout>
+                    <include
+                        android:id="@+id/logo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        layout="@layout/logo_layout"
+                        android:layout_gravity="center"/>
 
-</ScrollView>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/b_one_man_game"
+                        style="@style/MyButtonStyle.MainMenuButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/start_one_man_game" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/b_game_with_android"
+                        style="@style/MyButtonStyle.MainMenuButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/start_game_with_android" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/b_game_with_friends"
+                        style="@style/MyButtonStyle.MainMenuButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/start_game_with_friends" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/b_settings"
+                        style="@style/MyButtonStyle.MainMenuButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/settings" />
+
+                    <include
+                        android:id="@+id/init_root"
+                        layout="@layout/layout_first_launch"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </FrameLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>
