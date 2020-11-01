@@ -21,14 +21,20 @@ public class GameLab {
     }
 
     private OneManGame game;
-    private MultiplePlayersGame multiGame;
+    private MultiplayerGame multiGame;
 
     public OneManGame createGame(String initWord, FieldSizeType fieldSize, FieldType fieldType, GamePlayer player) {
-        game = new OneManGame(initWord, fieldSize, fieldType, player, Injection.provideWordsRepository());
+        AbstractField field;
+        if (fieldType == FieldType.SQUARE) {
+            field = new ClassicField(initWord, fieldSize);
+        } else {
+            field = new HexagonField(initWord, fieldSize);
+        }
+        game = new OneManGame(field, player, Injection.provideAppRepository());
         return game;
     }
 
-    public MultiplePlayersGame createMultiplayerGame(
+    public MultiplayerGame createMultiplayerGame(
             String initWord, FieldSizeType fieldSize, FieldType fieldType, List<GamePlayer> players) {
         AbstractField field;
         if (fieldType == FieldType.SQUARE) {
@@ -36,7 +42,7 @@ public class GameLab {
         } else {
             field = new HexagonField(initWord, fieldSize);
         }
-        multiGame = new MultiplePlayersGame(field, players, Injection.provideWordsRepository());
+        multiGame = new MultiplayerGame(field, players, Injection.provideAppRepository());
         return multiGame;
     }
 
@@ -44,7 +50,7 @@ public class GameLab {
         return game;
     }
 
-    public MultiplePlayersGame getMultiplayerGame() {
+    public MultiplayerGame getMultiplayerGame() {
         return multiGame;
     }
 

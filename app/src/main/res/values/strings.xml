@@ -36,10 +36,11 @@
 
     // --- SPLASH SCREEN ---
     <string name="database_creation">Database creation</string>
+    <string name="first_launch">The first launch of the application takes a little time</string>
 
     // --- GAME SCREEN ---
     <string name="your_score">Your score: %1$d</string>
-    <string name="score">%s: %d</string>
+    <string name="score">%s %d</string>
     <string name="used_words">Used words:</string>
     <string name="game_paused">The game is paused</string>
     <string name="resume_game">Resume game</string>

@@ -57,6 +57,8 @@ public interface GameContract {
 
         void resetView();
 
+        void  cleanup();
+
         void onShowUsedWordsClicked();
 
         void onCellClicked(int cellNumber);

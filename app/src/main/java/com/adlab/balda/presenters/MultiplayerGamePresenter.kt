@@ -8,18 +8,25 @@ import com.adlab.balda.enums.FieldSizeType
 import com.adlab.balda.enums.FieldType
 import com.adlab.balda.enums.GameMessageType
 import com.adlab.balda.model.GameLab
-import com.adlab.balda.model.MultiplePlayersGame
+import com.adlab.balda.model.MultiplayerGame
 import com.adlab.balda.model.Timer
 import com.adlab.balda.model.view_field.AbstractViewField
 import com.adlab.balda.model.view_field.ClassicViewField
 import com.adlab.balda.model.view_field.HexagonViewField
 import com.adlab.balda.utils.isCorrectChar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MultiplayerGamePresenter(
         private var mGameView: MultiplayerGameContract.View?
-): MultiplayerGameContract.Presenter {
+): MultiplayerGameContract.Presenter, CoroutineScope {
 
-    private val game: MultiplePlayersGame = GameLab.getInstance().multiplayerGame
+    private val job = Job()
+    override val coroutineContext = job + Dispatchers.Main
+
+    private val game: MultiplayerGame = GameLab.getInstance().multiplayerGame
 
     private val field: AbstractViewField =
             getViewFieldByType(game.fieldType, game.getCopyOfCells(), game.fieldSize)
@@ -40,6 +47,10 @@ class MultiplayerGamePresenter(
 
     override fun resetView() {
         mGameView = null
+    }
+
+    override fun cleanup() {
+        job.cancel()
     }
 
     override fun onScreenShown() {
@@ -197,42 +208,46 @@ class MultiplayerGamePresenter(
     override fun confirmWord() {
         if (field.activeCellsContainEnteredLetter()) {
             isMoveChecking = true
-            val word = field.enteredLetterSequence
-            game.makeMove(field.enteredCellNumber, field.enteredLetter,
-                    field.activeCellNumbersArray, object : MultiplePlayersGame.MakeMoveCallback {
-                override fun onMoveAccepted() {
-                    isMoveChecking = false
-                    updateViewAfterSuccessfulMove(word)
-                    countdownTimer?.cancel()
-                    countdownTimer = null
-                    timer.reset()
-                    startCountdownTimer()
-                }
-
-                override fun onWordIsNotExist() {
-                    isMoveChecking = false
-                    mGameView?.showMessage(GameMessageType.NO_SUCH_WORD)
-                    if (countdownTimer == null) onTimerOver()
-                }
-
-                override fun onWordIsAlreadyUsed() {
-                    isMoveChecking = false
-                    mGameView?.showMessage(GameMessageType.WORD_ALREADY_USED)
-                    if (countdownTimer == null) onTimerOver()
-                }
-
-                override fun onGameFinished() {
-                    isMoveChecking = false
-                    updateViewAfterSuccessfulMove(word)
-                    countdownTimer?.cancel()
-                    countdownTimer = null
-                    timer.isRun = false
-                    showWinner()
-                }
-            })
+            tryToMakeMove()
         } else {
             mGameView?.showMessage(GameMessageType.MUST_CONTAIN_NEW_LETTER)
         }
+    }
+
+    private fun tryToMakeMove() = launch {
+        val word = field.enteredLetterSequence
+        game.makeMove(field.enteredCellNumber, field.enteredLetter,
+                field.activeCellNumbersArray, object : MultiplayerGame.MakeMoveCallback {
+            override fun onMoveAccepted() {
+                isMoveChecking = false
+                updateViewAfterSuccessfulMove(word)
+                countdownTimer?.cancel()
+                countdownTimer = null
+                timer.reset()
+                startCountdownTimer()
+            }
+
+            override fun onWordIsNotExist() {
+                isMoveChecking = false
+                mGameView?.showMessage(GameMessageType.NO_SUCH_WORD)
+                if (countdownTimer == null) onTimerOver()
+            }
+
+            override fun onWordIsAlreadyUsed() {
+                isMoveChecking = false
+                mGameView?.showMessage(GameMessageType.WORD_ALREADY_USED)
+                if (countdownTimer == null) onTimerOver()
+            }
+
+            override fun onGameFinished() {
+                isMoveChecking = false
+                updateViewAfterSuccessfulMove(word)
+                countdownTimer?.cancel()
+                countdownTimer = null
+                timer.isRun = false
+                showWinner()
+            }
+        })
     }
 
     override fun exitGame() {

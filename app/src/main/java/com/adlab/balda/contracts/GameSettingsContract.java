@@ -62,6 +62,8 @@ public interface GameSettingsContract {
 
         void resetView();
 
+        void cleanup();
+
         void initWordChanged(@NonNull String newWord);
 
         void generateRandomWord();

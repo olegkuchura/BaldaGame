@@ -1,13 +1,13 @@
 package com.adlab.balda.model
 
-import com.adlab.balda.database.WordsDataSource
+import com.adlab.balda.database.AppRepository
 import com.adlab.balda.model.field.AbstractField
 import kotlin.collections.ArrayList
 
-class MultiplePlayersGame(
+class MultiplayerGame(
         private val field: AbstractField,
         private val players: List<GamePlayer>,
-        private val wordsRepository: WordsDataSource
+        private val repository: AppRepository
 ) {
     var curPlayerIndex: Int = 0
         private set
@@ -45,7 +45,7 @@ class MultiplePlayersGame(
         }
 
 
-    fun makeMove(enteredCellNumber: Int, enteredLetter: Char, cellsWithWord: IntArray, callback: MakeMoveCallback) {
+    suspend fun makeMove(enteredCellNumber: Int, enteredLetter: Char, cellsWithWord: IntArray, callback: MakeMoveCallback) {
         val enteredWord: String = field.getEnteredWord(enteredCellNumber, enteredLetter, cellsWithWord)
         if (field.initWord == enteredWord) {
             callback.onWordIsAlreadyUsed()
@@ -60,17 +60,15 @@ class MultiplePlayersGame(
             }
         }
 
-        wordsRepository.isWordExist(enteredWord) { isWordExist ->
-            if (isWordExist) {
-                val isGameFinished = applyMove(enteredCellNumber, enteredLetter, enteredWord)
-                if (isGameFinished) {
-                    callback.onGameFinished()
-                } else {
-                    callback.onMoveAccepted()
-                }
+        if (repository.isWordExist(enteredWord)) {
+            val isGameFinished = applyMove(enteredCellNumber, enteredLetter, enteredWord)
+            if (isGameFinished) {
+                callback.onGameFinished()
             } else {
-                callback.onWordIsNotExist()
+                callback.onMoveAccepted()
             }
+        } else {
+            callback.onWordIsNotExist()
         }
     }
 

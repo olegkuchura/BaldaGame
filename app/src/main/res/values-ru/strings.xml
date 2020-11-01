@@ -37,10 +37,11 @@
 
     // --- SPLASH SCREEN ---
     <string name="database_creation">Создание базы данных</string>
+    <string name="first_launch">Первый запуск приложения требует немного времени</string>
 
     // --- GAME SCREEN ---
     <string name="your_score">Ваши баллы: %1$d</string>
-    <string name="score">%s: %d</string>
+    <string name="score">%s %d</string>
     <string name="used_words">Использованные слова:</string>
     <string name="game_paused">Игра приостановлена</string>
     <string name="resume_game">Продолжить игру</string>

@@ -20,7 +20,6 @@ import com.adlab.balda.enums.FieldSizeType;
 import com.adlab.balda.enums.FieldType;
 import com.adlab.balda.enums.GameType;
 import com.adlab.balda.utils.PresenterManager;
-import com.adlab.balda.utils.UtilsKt;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
@@ -116,7 +115,7 @@ public class GameSettingsActivity extends AppCompatActivity
                 });
 
         //todo remove context in params
-        PresenterManager.provideGameSettingsPresenter(this, this);
+        PresenterManager.provideGameSettingsPresenter( this);
 
         binding.rvPlayers.setAdapter(new PlayersAdapter(mPresenter));
 
@@ -291,6 +290,7 @@ public class GameSettingsActivity extends AppCompatActivity
         super.onDestroy();
         mPresenter.resetView();
         if (isFinishing()) {
+            mPresenter.cleanup();
             PresenterManager.resetGameSettingsPresenter();
         }
     }

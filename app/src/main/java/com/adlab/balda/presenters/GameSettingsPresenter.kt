@@ -5,25 +5,27 @@ import com.adlab.balda.DEFAULT_FIELD_TYPE
 import com.adlab.balda.TEST_MODE
 import com.adlab.balda.adapters.PlayersAdapter
 import com.adlab.balda.contracts.GameSettingsContract
-import com.adlab.balda.database.WordsDataSource.GetWordCallback
-import com.adlab.balda.database.WordsRepository
+import com.adlab.balda.database.AppRepository
 import com.adlab.balda.enums.FieldSizeType
 import com.adlab.balda.enums.FieldType
 import com.adlab.balda.enums.GameType
 import com.adlab.balda.model.GameLab
 import com.adlab.balda.model.GamePlayer
 import com.adlab.balda.model.move_search.MoveFinderManager
-import com.adlab.balda.utils.AppExecutors
+import kotlinx.coroutines.*
 
 class GameSettingsPresenter(
-        private val repository: WordsRepository,
-        private var viewState: GameSettingsContract.View?
-) : GameSettingsContract.Presenter {
+        private var viewState: GameSettingsContract.View?,
+        private val repository: AppRepository
+) : GameSettingsContract.Presenter, CoroutineScope {
 
     companion object {
         private const val MAX_PLAYERS_COUNT = 5
         private const val MIN_PLAYERS_COUNT = 2
     }
+
+    private val job = Job()
+    override val coroutineContext = job + Dispatchers.Main
 
     init {
         viewState?.setPresenter(this)
@@ -51,17 +53,13 @@ class GameSettingsPresenter(
         viewState = null
     }
 
+    override fun cleanup() {
+        job.cancel()
+    }
+
     override fun start() {}
 
     override fun start(gameType: GameType) {
-        if (!MoveFinderManager.inited) {
-            repository.getAllWords {
-                AppExecutors().diskIO().execute {
-                    MoveFinderManager.init(it)
-                }
-            }
-        }
-
         if (isFirstStart) {
             isFirstStart = false
             generateRandomWord()
@@ -76,24 +74,24 @@ class GameSettingsPresenter(
     }
 
     override fun initWordChanged(newWord: String) {
-        mCurrentWord = newWord
-        if (mCurrentWord.isEmpty()) {
-            mIsCurrentWordExist = false
-            viewState?.showEmptyWordError()
-            viewState?.showNonAppropriateWordLength(mWordLength)
-            viewState?.setStartGameEnabled(false)
-            return
-        }
-        if (mCurrentWord.length == mWordLength) {
-            viewState?.hideNonAppropriateWordLength()
-        } else {
-            viewState?.showNonAppropriateWordLength(mWordLength)
-        }
-        repository.isWordExist(mCurrentWord) { isWordExist ->
-            mIsCurrentWordExist = isWordExist
+        launch {
+            mCurrentWord = newWord
+            if (mCurrentWord.isEmpty()) {
+                mIsCurrentWordExist = false
+                viewState?.showEmptyWordError()
+                viewState?.showNonAppropriateWordLength(mWordLength)
+                viewState?.setStartGameEnabled(false)
+                return@launch
+            }
+            if (mCurrentWord.length == mWordLength) {
+                viewState?.hideNonAppropriateWordLength()
+            } else {
+                viewState?.showNonAppropriateWordLength(mWordLength)
+            }
+            mIsCurrentWordExist = repository.isWordExist(mCurrentWord)
             if (mIsCurrentWordExist) {
                 viewState?.hideInitWordError()
-                viewState?.setStartGameEnabled(mCurrentWord.length == mWordLength )
+                viewState?.setStartGameEnabled(mCurrentWord.length == mWordLength)
             } else {
                 viewState?.showNonExistentWordError()
                 viewState?.setStartGameEnabled(false)
@@ -102,17 +100,17 @@ class GameSettingsPresenter(
     }
 
     override fun generateRandomWord() {
-        repository.getRandomWord(mWordLength, object : GetWordCallback {
-            override fun onWordLoaded(word: String) {
-                mCurrentWord = word
-                mIsCurrentWordExist = true
-                viewState?.setInitWord(mCurrentWord)
-                viewState?.hideInitWordError()
-                viewState?.setStartGameEnabled(true)
-            }
+        loadRandomWord()
+    }
 
-            override fun onDataNotAvailable() {}
-        })
+    private fun loadRandomWord() = launch {
+        mCurrentWord = repository.getRandomWord(mWordLength).word
+        mIsCurrentWordExist = true
+        viewState?.let { view ->
+            view.setInitWord(mCurrentWord)
+            view.hideInitWordError()
+            view.setStartGameEnabled(true)
+        }
     }
 
     override fun bindPlayer(playerView: PlayersAdapter.PlayerView, position: Int) {

@@ -59,6 +59,8 @@ interface MultiplayerGameContract {
 
         fun resetView()
 
+        fun cleanup()
+
         fun onScreenShown()
 
         fun onScreenHidden()

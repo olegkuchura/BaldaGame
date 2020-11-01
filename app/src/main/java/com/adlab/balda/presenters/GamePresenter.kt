@@ -18,7 +18,10 @@ import kotlinx.coroutines.*
 
 class GamePresenter(
         private var mGameView: GameContract.View?
-): GameContract.Presenter {
+): GameContract.Presenter, CoroutineScope {
+
+    private val job = Job()
+    override val coroutineContext = job + Dispatchers.Main
 
     private val game: OneManGame = GameLab.getInstance().game
 
@@ -40,11 +43,14 @@ class GamePresenter(
         mGameView = null
     }
 
+    override fun cleanup() {
+        job.cancel()
+    }
+
     override fun onShowUsedWordsClicked() {
         mGameView?.showUsedWords()
     }
-
-
+    
     override fun start() {
         mGameView?.let { gameView ->
             gameView.showField(game.fieldSize.intValue(), game.fieldSize.intValue(), game.fieldType, game.fieldSize)
@@ -192,40 +198,48 @@ class GamePresenter(
 
     override fun confirmWord() {
         if (field.activeCellsContainEnteredLetter()) {
-            val oldScore: Int = game.player.score
-            game.makeMove(field.enteredCellNumber, field.enteredLetter,
-                    field.activeCellNumbersArray, object : OneManGame.MakeMoveCallback {
-                override fun makeNextMove() {
-                    updateViewAfterSuccessfulMove(oldScore)
-                }
-
-                override fun onWordIsNotExist() {
-                    mGameView?.showMessage(GameMessageType.NO_SUCH_WORD)
-                }
-
-                override fun onWordIsAlreadyUsed() {
-                    mGameView?.showMessage(GameMessageType.WORD_ALREADY_USED)
-                }
-
-                override fun onGameFinished() {
-                    updateViewAfterSuccessfulMove(oldScore)
-                    mGameView?.showGameResult(game.player.score)
-                }
-            })
+            tryToMakeMove()
         } else {
             mGameView?.showMessage(GameMessageType.MUST_CONTAIN_NEW_LETTER)
         }
     }
 
+    private fun tryToMakeMove() = launch {
+        val oldScore: Int = game.player.score
+        game.makeMove(field.enteredCellNumber, field.enteredLetter,
+                field.activeCellNumbersArray, object : OneManGame.MakeMoveCallback {
+            override fun makeNextMove() {
+                updateViewAfterSuccessfulMove(oldScore)
+            }
+
+            override fun onWordIsNotExist() {
+                mGameView?.showMessage(GameMessageType.NO_SUCH_WORD)
+            }
+
+            override fun onWordIsAlreadyUsed() {
+                mGameView?.showMessage(GameMessageType.WORD_ALREADY_USED)
+            }
+
+            override fun onGameFinished() {
+                updateViewAfterSuccessfulMove(oldScore)
+                mGameView?.showGameResult(game.player.score)
+            }
+        })
+    }
+
     override fun hintClicked() {
-        mGameView?.let { gameView ->
-            clearEnteredLetter()
-            hideHint()
-            if (!MoveFinderManager.inited) return
-            hintMove = MoveFinderManager.findRandomMove(game.field, game.usedWords)
-            gameView.showHintBanner(hintMove!!.word)
-            for (i in hintMove!!.wordCharsPos) {
-                gameView.updateCell(i)
+        if (!MoveFinderManager.inited) return
+        clearEnteredLetter()
+        hideHint()
+        launch {
+            withContext(Dispatchers.Default) {
+                hintMove = MoveFinderManager.findRandomMove(game.field, game.usedWords)
+            }
+            mGameView?.let { gameView ->
+                gameView.showHintBanner(hintMove!!.word)
+                for (i in hintMove!!.wordCharsPos) {
+                    gameView.updateCell(i)
+                }
             }
         }
     }
