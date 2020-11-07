@@ -7,329 +7,329 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/sv_game_settings_root"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/backgroundScreen">
-
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/sv_game_settings_root"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="64dp"
-            tools:context="com.adlab.balda.activities.GameSettingsActivity">
+            android:layout_height="match_parent"
+            android:background="@color/backgroundScreen">
 
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp">
+                android:orientation="vertical"
+                android:paddingBottom="64dp">
 
-                <RelativeLayout
-                    android:id="@+id/rl_choose_init_word"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp">
-
-                    <TextView
-                        android:id="@+id/tv_enter_init_word"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:fontFamily="@font/stix_two_text"
-                        android:text="@string/enter_init_word"
-                        android:textSize="28sp" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/ib_generate_word"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:layout_below="@id/tv_enter_init_word"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="4dp"
-                        android:tint="@color/colorAccent"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:padding="8dp"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/ic_dice" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til"
-                        style="@style/MyEditTextStyle"
-                        android:theme="@style/MyEditTextStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_enter_init_word"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_toStartOf="@id/ib_generate_word"
-                        android:hint="@string/init_word"
-                        app:errorEnabled="true">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/et_initWord"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/stix_two_text"
-                            android:inputType="textCapCharacters|textNoSuggestions"
-                            tools:text="БАЛДА" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </RelativeLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv_players"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
-
-                <RelativeLayout
-                    android:id="@+id/rl_enter_players"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp">
-
-                    <TextView
-                        android:id="@+id/tv_enter_players"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:fontFamily="@font/stix_two_text"
-                        android:text="@string/enter_players"
-                        android:textSize="28sp" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_players"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_enter_players"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="0dp"
-                        android:orientation="horizontal"
-                        android:overScrollMode="ifContentScrolls"
-                        app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
-                        tools:itemCount="3"
-                        tools:listitem="@layout/item_player" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/ib_add_player"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:layout_below="@id/rv_players"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="4dp"
-                        android:tint="@color/colorAccent"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:padding="8dp"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/ic_add" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/til_player_name"
-                        style="@style/MyEditTextStyle"
-                        android:theme="@style/MyEditTextStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/rv_players"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_toStartOf="@id/ib_add_player"
-                        android:hint="@string/player_name"
-                        app:errorEnabled="true">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/et_player_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/stix_two_text"
-                            android:maxLength="25"
-                            android:inputType="textPersonName|textCapWords|textNoSuggestions"
-                            tools:text="Jackson"/>
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </RelativeLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/rl_choose_field_size"
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp">
 
-                    <ImageView
-                        android:id="@+id/b_reduce_field_size"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:paddingTop="16dp"
-                        android:paddingBottom="16dp"
-                        android:rotation="180"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        app:tint="@color/enabled_color_selector"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_field_size_value"
-                        app:layout_constraintEnd_toStartOf="@+id/tv_field_size_value"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tv_field_size_value"
-                        app:srcCompat="@drawable/ic_arrow_right"/>
-
-                    <ImageView
-                        android:id="@+id/b_increase_field_size"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:paddingTop="16dp"
-                        android:paddingBottom="16dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        app:tint="@color/enabled_color_selector"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_field_size_value"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@+id/tv_field_size_value"
-                        app:layout_constraintTop_toTopOf="@+id/tv_field_size_value"
-                        app:srcCompat="@drawable/ic_arrow_right" />
-
-                    <TextSwitcher
-                        android:id="@+id/tv_field_size_value"
-                        android:layout_width="120dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:fontFamily="@font/stix_two_text"
-                        android:gravity="center"
-                        android:textSize="24sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_choose_field_size"
-                        tools:text="Extra Large" />
-
-                    <TextView
-                        android:id="@+id/tv_field_size_value_invisible"
-                        android:layout_width="120dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:fontFamily="@font/stix_two_text"
-                        android:gravity="center"
-                        android:textSize="24sp"
-                        android:visibility="invisible"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_choose_field_size"
-                        tools:visibility="visible"
-                        tools:text="Extra Large" />
-
-                    <TextView
-                        android:id="@+id/tv_choose_field_size"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:text="@string/choose_field_size"
-                        android:textSize="28sp"
-                        android:fontFamily="@font/stix_two_text"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp">
-
-                    <RadioGroup
-                        android:id="@+id/rb_field_type"
+                    <RelativeLayout
+                        android:id="@+id/rl_choose_init_word"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:checkedButton="@id/rb1"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_choose_field_type">
+                        android:layout_marginEnd="8dp">
 
-                        <RadioButton
-                            android:id="@+id/rb1"
+                        <TextView
+                            android:id="@+id/tv_enter_init_word"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
                             android:fontFamily="@font/stix_two_text"
-                            android:text="@string/square"
-                            android:textColor="@color/checked_color_selector"
-                            android:textSize="24sp" />
+                            android:text="@string/enter_init_word"
+                            android:textSize="28sp" />
 
-                        <RadioButton
-                            android:id="@+id/rb2"
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/ib_generate_word"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:layout_below="@id/tv_enter_init_word"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="4dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:padding="8dp"
+                            android:scaleType="centerCrop"
+                            android:tint="@color/colorAccent"
+                            app:srcCompat="@drawable/ic_dice" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til"
+                            style="@style/MyEditTextStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:fontFamily="@font/stix_two_text"
-                            android:text="@string/hexagon"
-                            android:textColor="@color/checked_color_selector"
-                            android:textSize="24sp" />
-                    </RadioGroup>
+                            android:layout_below="@id/tv_enter_init_word"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_toStartOf="@id/ib_generate_word"
+                            android:hint="@string/init_word"
+                            android:theme="@style/MyEditTextStyle"
+                            app:errorEnabled="true">
 
-                    <TextView
-                        android:id="@+id/tv_choose_field_type"
-                        android:layout_width="wrap_content"
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_initWord"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/stix_two_text"
+                                android:inputType="textCapCharacters|textNoSuggestions"
+                                tools:text="БАЛДА" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_players"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:visibility="visible">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_enter_players"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/choose_field_type"
-                        android:textSize="28sp"
-                        android:fontFamily="@font/stix_two_text"
-                        app:layout_constraintBottom_toTopOf="@id/rb_field_type"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp">
 
-            </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:id="@+id/tv_enter_players"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:fontFamily="@font/stix_two_text"
+                            android:text="@string/enter_players"
+                            android:textSize="28sp" />
 
-            <TextView
-                android:id="@+id/tv_not_appropriate_word_length_error"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="8dp"
-                android:textColor="@color/colorError"
-                android:textSize="12sp"
-                android:visibility="invisible"
-                tools:text="length of word must be 4 for this field"
-                tools:visibility="visible"/>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_players"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_enter_players"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginStart="0dp"
+                            android:orientation="horizontal"
+                            android:overScrollMode="ifContentScrolls"
+                            app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
+                            tools:itemCount="3"
+                            tools:listitem="@layout/item_player" />
 
-        </LinearLayout>
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/ib_add_player"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:layout_below="@id/rv_players"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="4dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:padding="8dp"
+                            android:scaleType="centerCrop"
+                            android:tint="@color/colorAccent"
+                            app:srcCompat="@drawable/ic_add" />
 
-    </androidx.core.widget.NestedScrollView>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_player_name"
+                            style="@style/MyEditTextStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/rv_players"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_toStartOf="@id/ib_add_player"
+                            android:hint="@string/player_name"
+                            android:theme="@style/MyEditTextStyle"
+                            app:errorEnabled="true">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_player_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/stix_two_text"
+                                android:inputType="textPersonName|textCapWords|textNoSuggestions"
+                                android:maxLength="25"
+                                tools:text="Jackson" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/rl_choose_field_size"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp">
+
+                        <ImageView
+                            android:id="@+id/b_reduce_field_size"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="16dp"
+                            android:rotation="180"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_field_size_value"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_field_size_value"
+                            app:layout_constraintHorizontal_bias="1.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/tv_field_size_value"
+                            app:srcCompat="@drawable/ic_arrow_right"
+                            app:tint="@color/enabled_color_selector" />
+
+                        <ImageView
+                            android:id="@+id/b_increase_field_size"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:paddingTop="16dp"
+                            android:paddingBottom="16dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_field_size_value"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toEndOf="@+id/tv_field_size_value"
+                            app:layout_constraintTop_toTopOf="@+id/tv_field_size_value"
+                            app:srcCompat="@drawable/ic_arrow_right"
+                            app:tint="@color/enabled_color_selector" />
+
+                        <TextSwitcher
+                            android:id="@+id/tv_field_size_value"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:fontFamily="@font/stix_two_text"
+                            android:gravity="center"
+                            android:textSize="24sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_choose_field_size"
+                            tools:text="Extra Large" />
+
+                        <TextView
+                            android:id="@+id/tv_field_size_value_invisible"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:fontFamily="@font/stix_two_text"
+                            android:gravity="center"
+                            android:textSize="24sp"
+                            android:visibility="invisible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_choose_field_size"
+                            tools:text="Extra Large"
+                            tools:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/tv_choose_field_size"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:fontFamily="@font/stix_two_text"
+                            android:text="@string/choose_field_size"
+                            android:textSize="28sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="8dp">
+
+                        <RadioGroup
+                            android:id="@+id/rb_field_type"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:checkedButton="@id/rb1"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_choose_field_type">
+
+                            <RadioButton
+                                android:id="@+id/rb1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/stix_two_text"
+                                android:text="@string/square"
+                                android:textColor="@color/checked_color_selector"
+                                android:textSize="24sp" />
+
+                            <RadioButton
+                                android:id="@+id/rb2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:fontFamily="@font/stix_two_text"
+                                android:text="@string/hexagon"
+                                android:textColor="@color/checked_color_selector"
+                                android:textSize="24sp" />
+                        </RadioGroup>
+
+                        <TextView
+                            android:id="@+id/tv_choose_field_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/stix_two_text"
+                            android:text="@string/choose_field_type"
+                            android:textSize="28sp"
+                            app:layout_constraintBottom_toTopOf="@id/rb_field_type"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/tv_not_appropriate_word_length_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:textColor="@color/colorError"
+                    android:textSize="12sp"
+                    android:visibility="invisible"
+                    tools:text="length of word must be 4 for this field"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/b_start_game"

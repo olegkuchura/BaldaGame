@@ -17,6 +17,7 @@ object MoveFinderManager {
         val straightTree = StraightTreeParser().parse(words)
         moveFinder = MoveFinder(straightTree, reverseTree)
         inited = true
+        log("MoveFinderManager initiated, reverseTree and straightTree are built")
     }
 
     fun findRandomMove(field: AbstractField, excludedWords: List<String>): Move {
