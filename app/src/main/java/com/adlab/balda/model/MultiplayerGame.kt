@@ -22,7 +22,7 @@ class MultiplayerGame(
         get() = players.size
 
     val winnerIndex
-        get() = players.indexOf(players.maxBy { it.score })
+        get() = players.indexOf( players.maxByOrNull { it.score } )
 
     val isFinished
         get() = field.isFieldFull
