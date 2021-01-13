@@ -78,4 +78,8 @@ class MainScreenPresenter(
     override fun startMultiplayerGameClicked() {
         viewState?.navigateToGameSettings(GameType.MULTIPLAYER)
     }
+
+    override fun settingsClicked() {
+        viewState?.navigateToSettings()
+    }
 }

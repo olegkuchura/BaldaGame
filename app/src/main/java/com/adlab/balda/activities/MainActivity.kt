@@ -27,9 +27,7 @@ class MainActivity: AppCompatActivity(), MainScreenContract.View {
             Toast.makeText(this, "Sorry, but game with Android isn't available yet", Toast.LENGTH_SHORT).show()
         }
         binding.bGameWithFriends.setOnClickListener { mPresenter.startMultiplayerGameClicked() }
-        binding.bSettings.setOnClickListener {
-            Toast.makeText(this, "Sorry, but settings aren't available yet", Toast.LENGTH_SHORT).show()
-        }
+        binding.bSettings.setOnClickListener { mPresenter.settingsClicked() }
 
         PresenterManager.provideMainScreenPresenter(this)
         mPresenter.start()
@@ -66,5 +64,9 @@ class MainActivity: AppCompatActivity(), MainScreenContract.View {
 
     override fun navigateToGameSettings(gameType: GameType) {
         startActivity(GameSettingsActivity.createIntent(this, gameType))
+    }
+
+    override fun navigateToSettings() {
+        startActivity(RulesActivity.createIntent(this))
     }
 }

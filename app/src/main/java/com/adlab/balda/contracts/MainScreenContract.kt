@@ -10,6 +10,7 @@ interface MainScreenContract {
         fun showInitiation()
         fun showMainButtons()
         fun navigateToGameSettings(gameType: GameType)
+        fun navigateToSettings()
     }
 
     interface Presenter: BasePresenter {
@@ -18,6 +19,7 @@ interface MainScreenContract {
         fun cleanup()
         fun startOneManGameClicked()
         fun startMultiplayerGameClicked()
+        fun settingsClicked()
     }
 
 }
