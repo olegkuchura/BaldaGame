@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="rule"
+            type="com.adlab.balda.model.Rule" />
+
+        <variable
+            name="textVisibility"
+            type="Integer" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ruleImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="32dp"
+            app:layout_constraintBottom_toTopOf="@id/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:imageRes="@{rule.imageRes}"
+            tools:srcCompat="@drawable/im_rule1" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/noto_sans_extra_bold"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textColor="@color/green3"
+            android:text="@{rule.title}"
+            app:layout_constraintBottom_toTopOf="@id/descriptionContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="@string/title2"
+            tools:visibility="visible" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/descriptionContainer"
+            android:layout_width="match_parent"
+            android:layout_height="144dp"
+            android:layout_marginVertical="16dp"
+            android:layout_marginHorizontal="32dp"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:scrollbars="none"
+            android:visibility="@{textVisibility}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center_horizontal"
+                android:textSize="16sp"
+                android:text="@{rule.description}"
+                tools:text="@string/description2" />
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

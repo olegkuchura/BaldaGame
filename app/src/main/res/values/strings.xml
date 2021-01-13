@@ -80,6 +80,25 @@
     <!-- <string name="back_to_the_game">No, back to the game</string> -->
     <string name="back_to_the_game">No, continue</string>
 
+    // --- RULES SCREEN ---
+    <string name="title_rules">Rules of the Balda game</string>
+    <string name="next">Next</string>
+    <string name="done">Done</string>
+    // List of rules
+    <string name="title1">Start of the game</string>
+    <string name="description1">This is the game start.\nInitial word written in the middle.\nIt can be any real word. wkjfjiwe gjwelg wag iwljg jkrge lagh rhl gaekrg jklaerlgk lareg laergljha egka jrlglha ghlagher gkhserh ghlaw rgieali jgrlaehr ghahe rglka4 glaw gl4i haehgf oaiw4 ghah 4hglia4w hgah34 gh4a hg4 </string>
+    <string name="title2">Add a new letter</string>
+    <string name="description2">Click on an empty cell to add a new letter to the field.\nYou can add only one letter by one move.\nYou can add letter only near by existing letter.</string>
+    <string name="title3">Select a new word</string>
+    <string name="description3">Make long click for select word.\nYou should to make up as long words as possible.\nAmount of points you get is equal to the length of the word.</string>
+    <string name="title4">End of the game</string>
+    <string name="description4">The game will end when there are no empty cells on the field.\nThe winner will be the one with the most points.</string>
+    <string name="title5">Конец игры</string>
+    <string name="description5">Игра заканчивается тогда, когда либо заполнены все клетки, либо невозможно составить очередное слово согласно указанным правилам.</string>
+    <string name="title6">Конец игры</string>
+    <string name="description6">Игра заканчивается тогда, когда либо заполнены все клетки, либо невозможно составить очередное слово согласно указанным правилам.</string>
+    <string name="title7">Конец игры</string>
+    <string name="description7">Игра заканчивается тогда, когда либо заполнены все клетки, либо невозможно составить очередное слово согласно указанным правилам.</string>
 
     <string name="not_implemented">Sorry, this function isn\'t implemented yet</string>
 

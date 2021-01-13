@@ -9,6 +9,7 @@
         <item name="colorSecondary">@color/colorAccent</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorError">@color/colorError</item>
+        <item name="colorControlNormal">@color/colorAccent</item>
         <item name="materialButtonStyle">@style/MyButtonStyle</item>
         <item name="editTextStyle">@style/MyEditTextStyle</item>
         <item name="android:editTextStyle">@style/MyEditTextStyle</item>
@@ -23,6 +24,7 @@
         <item name="colorSecondary">@color/colorAccent</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorError">@color/colorError</item>
+        <item name="colorControlNormal">@color/colorAccent</item>
         <item name="materialButtonStyle">@style/MyButtonStyle</item>
         <item name="editTextStyle">@style/MyEditTextStyle</item>
         <item name="android:editTextStyle">@style/MyEditTextStyle</item>

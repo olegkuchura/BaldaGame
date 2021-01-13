@@ -29,6 +29,8 @@
 
         <activity android:name=".activities.GameSettingsActivity"/>
 
+        <activity android:name=".activities.RulesActivity"/>
+
     </application>
 
 </manifest>
