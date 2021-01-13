@@ -86,19 +86,19 @@
     <string name="done">Done</string>
     // List of rules
     <string name="title1">Start of the game</string>
-    <string name="description1">This is the game start.\nInitial word written in the middle.\nIt can be any real word. wkjfjiwe gjwelg wag iwljg jkrge lagh rhl gaekrg jklaerlgk lareg laergljha egka jrlglha ghlagher gkhserh ghlaw rgieali jgrlaehr ghahe rglka4 glaw gl4i haehgf oaiw4 ghah 4hglia4w hgah34 gh4a hg4 </string>
+    <string name="description1">Balda is a game in which you need to form words using letters located on the playing field.\nAt the beginning of the game, the initial word is entered in the middle.</string>
     <string name="title2">Add a new letter</string>
-    <string name="description2">Click on an empty cell to add a new letter to the field.\nYou can add only one letter by one move.\nYou can add letter only near by existing letter.</string>
+    <string name="description2">Players make moves one by one.\nDuring his turn, the player must substitute a letter on the playing field so that it is located in a cell adjacent to already filled cells.</string>
     <string name="title3">Select a new word</string>
-    <string name="description3">Make long click for select word.\nYou should to make up as long words as possible.\nAmount of points you get is equal to the length of the word.</string>
-    <string name="title4">End of the game</string>
-    <string name="description4">The game will end when there are no empty cells on the field.\nThe winner will be the one with the most points.</string>
-    <string name="title5">Конец игры</string>
-    <string name="description5">Игра заканчивается тогда, когда либо заполнены все клетки, либо невозможно составить очередное слово согласно указанным правилам.</string>
-    <string name="title6">Конец игры</string>
-    <string name="description6">Игра заканчивается тогда, когда либо заполнены все клетки, либо невозможно составить очередное слово согласно указанным правилам.</string>
-    <string name="title7">Конец игры</string>
-    <string name="description7">Игра заканчивается тогда, когда либо заполнены все клетки, либо невозможно составить очередное слово согласно указанным правилам.</string>
+    <string name="description3">After placing a letter on the game field, player must compose a word using the added letter.\nTo do this, the letters of the new word are sequentially marked.</string>
+    <string name="title4">Restrictions</string>
+    <string name="description4">You can use common nouns in the game.\nThe word must exist in the game\'s dictionary.\nWords cannot be repeated within the same game.</string>
+    <string name="title5">Earning points</string>
+    <string name="description5">One point is awarded for each letter of a new word.\nThe longer the word, the more points the player gets per move.</string>
+    <string name="title6">End of the game</string>
+    <string name="description6">The game ends when all cells of the playing field are filled.\nOr in the case when it is impossible to form the next word according to the specified rules.</string>
+    <string name="title7">Determining the winner</string>
+    <string name="description7">The game is won by the one who scored the most points at the end of the game.\nIf there are several players with the most points, a draw is declared.</string>
 
     <string name="not_implemented">Sorry, this function isn\'t implemented yet</string>
 
