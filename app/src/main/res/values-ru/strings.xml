@@ -84,8 +84,6 @@
 
     // --- RULES SCREEN ---
     <string name="title_rules">Правила игры Балда</string>
-    <string name="next">Дальше</string>
-    <string name="done">Готово</string>
     // List of rules
     <string name="title1">Начало игры</string>
     <string name="description1">Балда — игра, в которой необходимо составлять слова с помощью букв, расположенных на игровом поле.\nВ начале игры по середине вписывается начальное слово.</string>
